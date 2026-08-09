@@ -534,36 +534,36 @@
 /* ---------------- storage helpers ---------------- */
 async function loadBooks(){
   try{
-    const r = await window.storage.get('books', false);
-    return r ? JSON.parse(r.value) : [];
+    const v = localStorage.getItem('books');
+    return v ? JSON.parse(v) : [];
   }catch(e){ return []; }
 }
 async function saveBooks(books){
-  try{ await window.storage.set('books', JSON.stringify(books), false); }
+  try{ localStorage.setItem('books', JSON.stringify(books)); }
   catch(e){ console.error('save failed', e); }
 }
 async function loadCourses(){
   try{
-    const r = await window.storage.get('courses', false);
-    return r ? JSON.parse(r.value) : [];
+    const v = localStorage.getItem('courses');
+    return v ? JSON.parse(v) : [];
   }catch(e){ return []; }
 }
 async function saveCourses(courses){
-  try{ await window.storage.set('courses', JSON.stringify(courses), false); }
+  try{ localStorage.setItem('courses', JSON.stringify(courses)); }
   catch(e){ console.error('save failed', e); }
 }
 async function loadSchedule(){
   try{
-    const r = await window.storage.get('schedule', false);
-    return r ? JSON.parse(r.value) : null;
+    const v = localStorage.getItem('schedule');
+    return v ? JSON.parse(v) : null;
   }catch(e){ return null; }
 }
 async function saveSchedule(schedule){
-  try{ await window.storage.set('schedule', JSON.stringify(schedule), false); }
+  try{ localStorage.setItem('schedule', JSON.stringify(schedule)); }
   catch(e){ console.error('save failed', e); }
 }
 
-/* IndexedDB for PDF binary (window.storage is JSON/text only, capped at 5MB) */
+/* IndexedDB for PDF binary (localStorage is text-only and size-limited, not fit for large PDFs) */
 const DB_NAME='study-desk-pdfs', STORE='pdfs';
 function idbOpen(){
   return new Promise((res,rej)=>{
