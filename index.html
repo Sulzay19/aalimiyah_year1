@@ -431,10 +431,11 @@
     <button class="add-book-btn" onclick="openCourseModal()">+ Manage course years</button>
   </div>
   <div class="sidebar-footer">
-    <button onclick="exportBackup()">⬇ Export backup (.json)</button>
+    <button id="saveFileBtn" onclick="handleSaveFileClick()">💾 Save to file</button>
+    <button onclick="exportBackup()">⬇ Download a copy (.json)</button>
     <button onclick="document.getElementById('importFile').click()">⬆ Import backup</button>
     <input type="file" id="importFile" accept="application/json" style="display:none">
-    <div class="hint">Books &amp; PDFs live in this browser only. Export regularly to keep a copy.</div>
+    <div class="hint" id="saveFileHint">Books &amp; PDFs live in this browser only. Click "Save to file" once to link a single .json file — every change after that is written straight into it, no new files piling up.</div>
   </div>
 </div>
 
@@ -541,6 +542,7 @@ async function loadBooks(){
 async function saveBooks(books){
   try{ localStorage.setItem('books', JSON.stringify(books)); }
   catch(e){ console.error('save failed', e); }
+  syncToFile();
 }
 async function loadCourses(){
   try{
@@ -551,6 +553,7 @@ async function loadCourses(){
 async function saveCourses(courses){
   try{ localStorage.setItem('courses', JSON.stringify(courses)); }
   catch(e){ console.error('save failed', e); }
+  syncToFile();
 }
 async function loadSchedule(){
   try{
@@ -561,14 +564,19 @@ async function loadSchedule(){
 async function saveSchedule(schedule){
   try{ localStorage.setItem('schedule', JSON.stringify(schedule)); }
   catch(e){ console.error('save failed', e); }
+  syncToFile();
 }
 
 /* IndexedDB for PDF binary (localStorage is text-only and size-limited, not fit for large PDFs) */
-const DB_NAME='study-desk-pdfs', STORE='pdfs';
+const DB_NAME='study-desk-pdfs', STORE='pdfs', META_STORE='meta';
 function idbOpen(){
   return new Promise((res,rej)=>{
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = ()=> req.result.createObjectStore(STORE);
+    const req = indexedDB.open(DB_NAME, 2);
+    req.onupgradeneeded = (e)=>{
+      const db = req.result;
+      if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+      if(!db.objectStoreNames.contains(META_STORE)) db.createObjectStore(META_STORE);
+    };
     req.onsuccess = ()=> res(req.result);
     req.onerror = ()=> rej(req.error);
   });
@@ -596,6 +604,137 @@ async function idbDelete(id){
     tx.objectStore(STORE).delete(id);
     tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
   });
+}
+async function idbMetaGet(key){
+  const db = await idbOpen();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(META_STORE,'readonly');
+    const req = tx.objectStore(META_STORE).get(key);
+    req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error);
+  });
+}
+async function idbMetaSet(key, value){
+  const db = await idbOpen();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(META_STORE,'readwrite');
+    tx.objectStore(META_STORE).put(value, key);
+    tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+  });
+}
+
+/* ---------------- linked save file (write straight to the same .json every time) ---------------- */
+// Uses the File System Access API where available (Chrome/Edge desktop): the user picks
+// a file once via showSaveFilePicker, the handle is remembered in IndexedDB (handles are
+// structured-cloneable), and every future save overwrites that same file in place instead
+// of downloading a fresh dated copy. Falls back to the old "download a new file" behaviour
+// on browsers that don't support it (Safari, Firefox).
+let savedFileHandle = null; // in-memory cache for this page load
+
+function fsAccessSupported(){ return typeof window.showSaveFilePicker === 'function'; }
+
+async function getSavedFileHandle(){
+  if(savedFileHandle) return savedFileHandle;
+  try{
+    const handle = await idbMetaGet('backupFileHandle');
+    if(handle) savedFileHandle = handle;
+    return savedFileHandle;
+  }catch(e){ return null; }
+}
+
+async function backupPayload(){
+  return { exportedAt: new Date().toISOString(), books, courses, schedule };
+}
+
+async function writeToHandle(handle){
+  const writable = await handle.createWritable();
+  await writable.write(JSON.stringify(await backupPayload(), null, 2));
+  await writable.close();
+}
+
+// Called after every data change. Only writes if a file is already linked AND we already
+// hold permission — never prompts in the background, since a permission prompt requires a
+// direct user gesture and shouldn't interrupt normal use.
+async function syncToFile(){
+  if(!fsAccessSupported()) return;
+  try{
+    const handle = await getSavedFileHandle();
+    if(!handle) return;
+    const perm = await handle.queryPermission({mode:'readwrite'});
+    if(perm !== 'granted') { updateSaveFileHint('unlinked'); return; }
+    await writeToHandle(handle);
+    updateSaveFileHint('linked', handle.name);
+  }catch(e){
+    console.warn('background save-to-file failed', e);
+    updateSaveFileHint('unlinked');
+  }
+}
+
+function updateSaveFileHint(state, name){
+  const hint = document.getElementById('saveFileHint');
+  const btn = document.getElementById('saveFileBtn');
+  if(!hint || !btn) return;
+  if(state === 'linked'){
+    hint.textContent = `Linked to "${name}" — every change is saved into that same file automatically.`;
+    btn.textContent = '💾 Linked ✓';
+  } else if(state === 'reconnect'){
+    hint.textContent = `Linked to "${name}", but permission needs refreshing after reload — click "Save to file" once to reconnect.`;
+    btn.textContent = '💾 Reconnect file';
+  } else {
+    hint.textContent = 'Books & PDFs live in this browser only. Click "Save to file" once to link a single .json file — every change after that is written straight into it, no new files piling up.';
+    btn.textContent = '💾 Save to file';
+  }
+}
+
+// Runs on load: if we already have a remembered handle, check whether we still have
+// write permission (Chrome keeps this granted across reloads in most cases) and reflect
+// that in the UI without popping any prompt.
+async function initSaveFileStatus(){
+  if(!fsAccessSupported()){
+    const hint = document.getElementById('saveFileHint');
+    const btn = document.getElementById('saveFileBtn');
+    if(hint) hint.textContent = 'Your browser doesn\'t support linking a live file, so "Save to file" will download a new dated copy each time instead — use "Download a copy" the same way.';
+    if(btn) btn.textContent = '⬇ Save (download)';
+    return;
+  }
+  const handle = await getSavedFileHandle();
+  if(!handle) return;
+  try{
+    const perm = await handle.queryPermission({mode:'readwrite'});
+    if(perm === 'granted') updateSaveFileHint('linked', handle.name);
+    else updateSaveFileHint('reconnect', handle.name);
+  }catch(e){
+    updateSaveFileHint('reconnect', handle.name);
+  }
+}
+
+// Wired to the "Save to file" button. First click (or any browser without the API):
+// picks/creates the file and links it. Every click after that just writes immediately.
+async function handleSaveFileClick(){
+  if(!fsAccessSupported()){ exportBackup(); return; }
+  try{
+    let handle = await getSavedFileHandle();
+    if(handle){
+      const perm = await handle.queryPermission({mode:'readwrite'});
+      if(perm !== 'granted'){
+        const req = await handle.requestPermission({mode:'readwrite'});
+        if(req !== 'granted'){ handle = null; }
+      }
+    }
+    if(!handle){
+      handle = await window.showSaveFilePicker({
+        suggestedName: 'maktabah-al-ilm-data.json',
+        types: [{ description: 'JSON file', accept: {'application/json': ['.json']} }]
+      });
+      savedFileHandle = handle;
+      await idbMetaSet('backupFileHandle', handle);
+    }
+    await writeToHandle(handle);
+    updateSaveFileHint('linked', handle.name);
+  }catch(e){
+    if(e && e.name === 'AbortError') return; // user cancelled the picker
+    console.error('save to file failed', e);
+    alert('Could not save to that file. You can try again, or use "Download a copy" instead.');
+  }
 }
 
 /* ---------------- state ---------------- */
@@ -655,6 +794,7 @@ function renderCover(){
   renderSidebar();
   renderCover();
   if(books.length){ selectBook(books[0].id); }
+  initSaveFileStatus();
 })();
 
 /* ---------------- view switching ---------------- */
