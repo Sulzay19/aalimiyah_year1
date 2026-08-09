@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maktabah al-Ilm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+    --wood:#221d17;
+    --wood-2:#2b241c;
+    --paper:#efe6d2;
+    --paper-dim:#c9bfa8;
+    --ink:#2c2418;
+    --brass:#c79a4b;
+    --brass-bright:#e0b768;
+    --moss:#5c7156;
+    --ember:#b1543a;
+    --line:#4a4033;
+    --shadow: 0 8px 24px rgba(0,0,0,.35);
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 20% -10%, rgba(199,154,75,.10), transparent 60%),
+      var(--wood);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--brass); color:var(--wood);}
+
+  /* ---------- layout ---------- */
+  .sidebar{
+    width:280px;
+    flex-shrink:0;
+    height:100vh;
+    background:linear-gradient(180deg, var(--wood-2), var(--wood));
+    border-right:1px solid var(--line);
+    padding:22px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    overflow:hidden;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    padding-bottom:14px; border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .brand-mark{
+    width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--brass-bright), var(--brass) 60%, #8a6626 100%);
+    box-shadow:0 0 14px rgba(199,154,75,.55);
+    flex-shrink:0;
+  }
+  .brand h1{font-family:'Source Serif 4',serif; font-size:17px; margin:0; font-weight:600; letter-spacing:.2px; line-height:1.2;}
+  .brand .arabic{display:block; font-family:'Amiri',serif; font-size:15px; color:var(--brass-bright); direction:rtl; margin-top:2px;}
+
+  .book-list{display:flex; flex-direction:column; gap:6px; overflow-y:auto; flex:1; min-height:0;}
+  .nav-tabs{display:flex; gap:6px; flex-shrink:0;}
+  .nav-tab{
+    flex:1; text-align:center; padding:8px 6px; border-radius:var(--radius); cursor:pointer;
+    font-size:11.5px; font-weight:600; letter-spacing:.4px; text-transform:uppercase;
+    border:1px solid var(--line); color:var(--paper-dim);
+  }
+  .nav-tab.active{border-color:var(--brass); color:var(--brass-bright); background:rgba(199,154,75,.1);}
+  .book-item{
+    padding:11px 12px; border-radius:var(--radius); cursor:pointer;
+    border:1px solid transparent;
+    display:flex; flex-direction:column; gap:3px;
+    transition:background .15s, border-color .15s;
+  }
+  .book-item:hover{background:rgba(199,154,75,.08);}
+  .book-item.active{background:rgba(199,154,75,.14); border-color:rgba(199,154,75,.4);}
+  .book-item .title{font-family:'Source Serif 4',serif; font-size:14.5px; font-weight:600; color:var(--paper);}
+  .book-item .meta{font-size:11px; color:var(--paper-dim); font-family:'IBM Plex Mono',monospace;}
+  .book-item .barwrap{height:3px; background:rgba(255,255,255,.08); border-radius:2px; margin-top:4px; overflow:hidden;}
+  .book-item .bar{height:100%; background:linear-gradient(90deg, var(--moss), var(--brass));}
+
+  .sidebar-actions{display:flex; flex-direction:column; gap:6px; flex-shrink:0; padding-top:10px; border-top:1px solid var(--line);}
+  .add-book-btn{
+    background:transparent; color:var(--brass-bright);
+    border:1px dashed var(--line); border-radius:var(--radius);
+    padding:11px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif; font-weight:500;
+    transition:border-color .15s, color .15s;
+  }
+  .add-book-btn:hover{border-color:var(--brass); color:var(--brass-bright);}
+  .sidebar-footer{display:flex; flex-direction:column; gap:6px; padding-top:10px; border-top:1px solid var(--line); flex-shrink:0;}
+  .sidebar-footer button{
+    background:transparent; color:var(--paper-dim); border:1px solid var(--line); border-radius:var(--radius);
+    padding:8px; font-size:11.5px; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .sidebar-footer button:hover{color:var(--brass-bright); border-color:var(--brass);}
+  .sidebar-footer .hint{font-size:10px; color:var(--paper-dim); opacity:.7; line-height:1.5;}
+
+  .main{
+    flex:1; min-width:0;
+    padding:28px 34px 40px;
+    overflow-y:auto;
+  }
+  .empty-state{
+    height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; color:var(--paper-dim);
+  }
+  .empty-state .lamp{width:54px;height:54px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--brass-bright), var(--brass) 55%, transparent 75%);
+    box-shadow:0 0 40px 10px rgba(199,154,75,.25); margin-bottom:18px;}
+  .empty-state h2{font-family:'Source Serif 4',serif; color:var(--paper); font-weight:600; margin:0 0 8px;}
+  .empty-state p{max-width:340px; font-size:13.5px; line-height:1.6; margin:0 0 18px;}
+
+  .book-header{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:22px; flex-wrap:wrap;}
+  .book-header h2{font-family:'Source Serif 4',serif; font-size:28px; margin:0 0 4px; font-weight:700;}
+  .book-header .subject{color:var(--brass-bright); font-size:12px; text-transform:uppercase; letter-spacing:1.5px; font-family:'IBM Plex Mono',monospace;}
+  .book-header .pages{color:var(--paper-dim); font-size:12.5px; margin-top:6px;}
+  .header-actions{display:flex; gap:8px;}
+  .btn{
+    background:rgba(199,154,75,.12); color:var(--brass-bright);
+    border:1px solid rgba(199,154,75,.35); border-radius:var(--radius);
+    padding:9px 14px; font-size:12.5px; font-weight:600; cursor:pointer;
+    font-family:'Inter',sans-serif; transition:background .15s;
+  }
+  .btn:hover{background:rgba(199,154,75,.22);}
+  .btn.primary{background:var(--brass); color:var(--wood); border-color:var(--brass);}
+  .btn.primary:hover{background:var(--brass-bright);}
+  .btn.danger{background:rgba(177,84,58,.12); color:#e08066; border-color:rgba(177,84,58,.4);}
+  .btn.ghost{background:transparent; border-color:var(--line); color:var(--paper-dim);}
+
+  .term-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:14px;}
+  .term-tab{
+    padding:8px 14px; border-radius:20px; font-size:12.5px; cursor:pointer;
+    border:1px solid var(--line); color:var(--paper-dim); font-weight:500;
+    display:flex; align-items:center; gap:7px;
+  }
+  .term-tab.active{border-color:var(--brass); color:var(--brass-bright); background:rgba(199,154,75,.1);}
+  .term-tab .dot{width:6px;height:6px;border-radius:50%; background:var(--moss);}
+  .term-tab.done .dot{background:var(--brass);}
+  .add-term-tab{border-style:dashed; color:var(--paper-dim); background:transparent;}
+
+  .term-panel{display:flex; gap:26px; align-items:flex-start; flex-wrap:wrap;}
+  .tracker-col{flex:1 1 420px; min-width:340px;}
+  .viewer-col{flex:1 1 380px; min-width:320px; position:sticky; top:20px;}
+
+  .ribbon-strip{
+    display:flex; align-items:center; gap:18px; margin-bottom:18px;
+    background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 16px;
+  }
+  .ribbon-strip .rstat{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--paper-dim);}
+  .ribbon-strip .rstat b{display:block; font-family:'Source Serif 4',serif; font-size:17px; color:var(--paper); font-weight:600;}
+  .ribbon-strip .rbar{flex:1; height:8px; background:rgba(255,255,255,.06); border-radius:5px; overflow:hidden; position:relative;}
+  .ribbon-strip .rbar .fill{height:100%; background:linear-gradient(90deg,var(--moss),var(--brass)); border-radius:5px;}
+
+  .day-row{
+    display:grid; grid-template-columns:26px 1fr auto auto; gap:12px; align-items:center;
+    padding:10px 12px; border-radius:var(--radius); border:1px solid transparent;
+    margin-bottom:6px; background:rgba(255,255,255,.02);
+  }
+  .day-row.studied{background:rgba(92,113,86,.12); border-color:rgba(92,113,86,.35);}
+  .day-row.today{border-color:var(--brass);}
+  .dogear{
+    width:22px;height:22px; cursor:pointer; position:relative; flex-shrink:0;
+    border:1.5px solid var(--paper-dim); border-radius:3px;
+  }
+  .dogear.on{background:var(--brass); border-color:var(--brass);}
+  .dogear.on::after{content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--wood); font-weight:700;}
+  .day-info .date{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--paper);}
+  .day-info .range{font-size:11.5px; color:var(--paper-dim); margin-top:1px;}
+  .day-row .go{background:transparent; border:1px solid var(--line); color:var(--paper-dim); border-radius:var(--radius); padding:5px 9px; font-size:11px; cursor:pointer;}
+  .day-row .go:hover{border-color:var(--brass); color:var(--brass-bright);}
+  .day-row .del{background:transparent; border:none; color:var(--line); cursor:pointer; font-size:14px; padding:4px;}
+  .day-row .del:hover{color:var(--ember);}
+
+  .add-day-form{
+    display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:center;
+    background:rgba(0,0,0,.15); padding:12px; border-radius:var(--radius); border:1px solid var(--line);
+  }
+  .add-day-form input{
+    background:var(--wood); border:1px solid var(--line); color:var(--paper);
+    border-radius:var(--radius); padding:8px 10px; font-size:12.5px; font-family:'IBM Plex Mono',monospace;
+  }
+  .add-day-form input[type=date]{color-scheme:dark;}
+  .add-day-form label{font-size:10.5px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px;}
+  .field{display:flex; flex-direction:column;}
+  .lock-notice{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    background:rgba(177,84,58,.10); border:1px solid rgba(177,84,58,.4); border-radius:var(--radius);
+    padding:13px 15px; margin-top:12px;
+  }
+  .lock-notice .msg{font-size:12.5px; color:#e0a894; line-height:1.5;}
+  .lock-notice .msg b{color:var(--paper); font-family:'IBM Plex Mono',monospace;}
+  .reminder-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    background:rgba(199,154,75,.12); border:1px solid rgba(199,154,75,.45); border-radius:var(--radius);
+    padding:13px 16px; margin-bottom:16px;
+  }
+  .reminder-banner .msg{font-size:13px; color:var(--brass-bright); display:flex; align-items:center; gap:8px;}
+  .reminder-banner .msg b{color:var(--paper);}
+  .reminder-dot{width:8px;height:8px;border-radius:50%; background:var(--ember); box-shadow:0 0 8px rgba(177,84,58,.7); flex-shrink:0; animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
+  .repace-banner{
+    display:flex; align-items:center; gap:10px; background:rgba(92,113,86,.14); border:1px solid rgba(92,113,86,.45);
+    border-radius:var(--radius); padding:11px 15px; margin-bottom:14px; font-size:12.5px; color:#a9c2a4;
+  }
+  .schedule-meta{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:14px; font-size:11.5px; color:var(--paper-dim); font-family:'IBM Plex Mono',monospace;}
+  .schedule-meta b{color:var(--paper); font-family:'Inter',sans-serif; font-weight:600;}
+  .weekday-picker{display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;}
+  .weekday-chip{
+    padding:6px 10px; border-radius:16px; border:1px solid var(--line); font-size:11.5px; cursor:pointer;
+    color:var(--paper-dim); user-select:none;
+  }
+  .weekday-chip.on{border-color:var(--brass); color:var(--brass-bright); background:rgba(199,154,75,.12);}
+
+  /* ---------- cover page ---------- */
+  .cover{
+    position:fixed; inset:0; z-index:100;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    background:
+      radial-gradient(ellipse 700px 420px at 50% 30%, rgba(199,154,75,.14), transparent 65%),
+      var(--wood);
+    text-align:center; padding:20px;
+    transition:opacity .5s ease, visibility .5s ease;
+  }
+  .cover.hidden{opacity:0; visibility:hidden; pointer-events:none;}
+  .cover-lamp{
+    width:76px; height:76px; border-radius:50%; margin-bottom:26px;
+    background:radial-gradient(circle at 35% 30%, var(--brass-bright), var(--brass) 55%, #7d5c22 100%);
+    box-shadow:0 0 60px 16px rgba(199,154,75,.3);
+    animation:coverGlow 3s ease-in-out infinite;
+  }
+  @keyframes coverGlow{0%,100%{box-shadow:0 0 60px 16px rgba(199,154,75,.28);} 50%{box-shadow:0 0 74px 22px rgba(199,154,75,.4);}}
+  .cover h1{font-family:'Source Serif 4',serif; font-size:40px; margin:0 0 4px; font-weight:700; letter-spacing:.3px; line-height:1.15;}
+  .cover .arabic{display:block; font-family:'Amiri',serif; font-size:26px; color:var(--brass-bright); direction:rtl; margin-bottom:14px;}
+  .cover .tag{color:var(--paper-dim); font-size:14px; letter-spacing:.3px; margin-bottom:30px;}
+  .cover-stats{display:flex; gap:34px; margin-bottom:34px; flex-wrap:wrap; justify-content:center;}
+  .cover-stats .cstat{text-align:center;}
+  .cover-stats .cstat b{display:block; font-family:'Source Serif 4',serif; font-size:26px; color:var(--brass-bright); font-weight:700;}
+  .cover-stats .cstat span{font-size:11px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:1.5px;}
+  .cover-enter{
+    background:var(--brass); color:var(--wood); border:none; border-radius:4px;
+    padding:14px 30px; font-size:14px; font-weight:700; cursor:pointer; letter-spacing:.3px;
+    font-family:'Inter',sans-serif; transition:background .15s, transform .15s;
+  }
+  .cover-enter:hover{background:var(--brass-bright); transform:translateY(-1px);}
+  .cover-date{position:absolute; top:26px; right:30px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--paper-dim);}
+
+  /* ---------- progress page ---------- */
+  .progress-header h2{font-family:'Source Serif 4',serif; font-size:28px; margin:0 0 4px; font-weight:700;}
+  .progress-header .sub{color:var(--paper-dim); font-size:13px; margin-bottom:24px;}
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:28px;}
+  .stat-card{
+    background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px;
+  }
+  .stat-card b{display:block; font-family:'Source Serif 4',serif; font-size:26px; color:var(--brass-bright); font-weight:700;}
+  .stat-card span{font-size:11px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:1px;}
+  .section-label{font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--paper-dim); margin:26px 0 12px; font-family:'IBM Plex Mono',monospace;}
+  .due-card{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    background:rgba(199,154,75,.07); border:1px solid var(--line); border-radius:var(--radius);
+    padding:13px 16px; margin-bottom:8px;
+  }
+  .due-card.overdue{background:rgba(177,84,58,.1); border-color:rgba(177,84,58,.4);}
+  .due-card .info b{font-family:'Source Serif 4',serif; font-size:14.5px; color:var(--paper); font-weight:600;}
+  .due-card .info .d{font-size:11.5px; color:var(--paper-dim); margin-top:2px; font-family:'IBM Plex Mono',monospace;}
+  .course-card{
+    background:rgba(0,0,0,.15); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; margin-bottom:14px;
+  }
+  .course-card .ctitle{font-family:'Source Serif 4',serif; font-size:16.5px; font-weight:600; margin-bottom:2px;}
+  .course-card .csub{font-size:11.5px; color:var(--brass-bright); font-family:'IBM Plex Mono',monospace; margin-bottom:12px; text-transform:uppercase; letter-spacing:.8px;}
+  .term-progress-row{display:grid; grid-template-columns:1fr 2fr auto; gap:14px; align-items:center; padding:8px 0; border-top:1px solid var(--line);}
+  .term-progress-row:first-of-type{border-top:none;}
+  .term-progress-row .tname{font-size:13px; color:var(--paper);}
+  .term-progress-row .tbar{height:7px; background:rgba(255,255,255,.06); border-radius:5px; overflow:hidden;}
+  .term-progress-row .tbar .fill{height:100%; background:linear-gradient(90deg,var(--moss),var(--brass));}
+  .status-badge{font-size:10.5px; padding:4px 9px; border-radius:12px; font-weight:600; letter-spacing:.3px; white-space:nowrap;}
+  .status-badge.ontrack{background:rgba(92,113,86,.2); color:#a9c2a4;}
+  .status-badge.behind{background:rgba(177,84,58,.2); color:#e08066;}
+  .status-badge.complete{background:rgba(199,154,75,.25); color:var(--brass-bright);}
+  .empty-progress{color:var(--paper-dim); font-size:13px; padding:20px 0;}
+
+  /* ---------- course years (sidebar grouping) ---------- */
+  .course-group{margin-bottom:4px;}
+  .course-group-label{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--brass-bright);
+    padding:10px 4px 4px; font-family:'IBM Plex Mono',monospace;
+  }
+  .course-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:rgba(0,0,0,.15); border:1px solid var(--line); border-radius:var(--radius);
+    padding:9px 12px;
+  }
+  .course-row .cname{font-size:13px; color:var(--paper);}
+  .course-row .cactions{display:flex; gap:6px;}
+  .course-row .cactions button{background:transparent; border:none; color:var(--paper-dim); cursor:pointer; font-size:12px;}
+  .course-row .cactions button:hover{color:var(--ember);}
+
+  /* ---------- certificate ---------- */
+  .certificate-wrap{width:640px; max-width:94vw;}
+  .certificate{
+    background:#f3ead2; color:#3a2f1f; border-radius:4px; padding:46px 40px;
+    position:relative; box-shadow:var(--shadow);
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(199,154,75,.15), transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(199,154,75,.15), transparent 40%);
+  }
+  .certificate::before{
+    content:''; position:absolute; inset:14px; border:2px solid #c79a4b; border-radius:2px; pointer-events:none;
+  }
+  .certificate::after{
+    content:''; position:absolute; inset:19px; border:1px solid #c79a4b; border-radius:2px; pointer-events:none; opacity:.6;
+  }
+  .cert-inner{position:relative; text-align:center;}
+  .cert-eyebrow{font-family:'Amiri',serif; font-size:20px; color:#8a6626; direction:rtl; margin-bottom:6px;}
+  .cert-eyebrow-en{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#8a6626; margin-bottom:26px;}
+  .cert-title{font-family:'Source Serif 4',serif; font-size:30px; font-weight:700; margin:0 0 6px; color:#2c2418;}
+  .cert-arabic-title{font-family:'Amiri',serif; font-size:22px; color:#8a6626; direction:rtl; margin-bottom:26px;}
+  .cert-body{font-size:14px; line-height:1.9; color:#4a3d28; margin-bottom:26px;}
+  .cert-book{font-family:'Source Serif 4',serif; font-size:22px; font-weight:700; color:#3a2f1f; display:block; margin:8px 0;}
+  .cert-subject{font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:#8a6626;}
+  .cert-footer{display:flex; justify-content:space-between; align-items:flex-end; margin-top:36px;}
+  .cert-date{font-family:'IBM Plex Mono',monospace; font-size:12px; color:#5c4c30; text-align:left;}
+  .cert-date b{display:block; font-family:'Source Serif 4',serif; font-size:14px; color:#2c2418; font-weight:600;}
+  .cert-seal{
+    width:64px; height:64px; border-radius:50%; flex-shrink:0;
+    background:radial-gradient(circle at 35% 30%, #e0b768, #c79a4b 55%, #7d5c22 100%);
+    display:flex; align-items:center; justify-content:center; color:#2c2418; font-size:22px;
+    box-shadow:0 3px 10px rgba(0,0,0,.25);
+  }
+  .cert-brand{font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#8a6626; text-align:right;}
+  @media print{
+    body *{visibility:hidden;}
+    .certificate-wrap, .certificate-wrap *{visibility:visible;}
+    .certificate-wrap{position:fixed; inset:0; margin:auto; width:90%;}
+    .no-print{display:none !important;}
+    .overlay{background:none !important; position:static !important;}
+  }
+
+  .viewer-box{
+    background:#141110; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .viewer-box.expanded{
+    position:fixed; inset:0; z-index:80; border-radius:0; margin:0;
+    display:flex; flex-direction:column;
+  }
+  .viewer-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:79; display:none;}
+  .viewer-backdrop.show{display:block;}
+  .viewer-toolbar{
+    display:flex; align-items:center; justify-content:space-between; padding:10px 12px;
+    border-bottom:1px solid var(--line); background:rgba(0,0,0,.25);
+  }
+  .viewer-toolbar .pagejump{display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--paper-dim);}
+  .viewer-toolbar input{width:52px; background:var(--wood); border:1px solid var(--line); color:var(--paper); border-radius:3px; padding:4px 6px; font-family:'IBM Plex Mono',monospace; text-align:center;}
+  .viewer-toolbar button{background:transparent; border:1px solid var(--line); color:var(--paper-dim); border-radius:3px; padding:5px 9px; cursor:pointer; font-size:13px;}
+  .viewer-toolbar button:hover{border-color:var(--brass); color:var(--brass-bright);}
+  .viewer-canvas-wrap{max-height:640px; overflow:auto; display:flex; justify-content:center; padding:14px; background:#1a1613;}
+  .viewer-box.expanded .viewer-canvas-wrap{max-height:none; flex:1;}
+  #pdfCanvas{box-shadow:0 4px 18px rgba(0,0,0,.5); max-width:100%;}
+  .viewer-empty{padding:60px 20px; text-align:center; color:var(--paper-dim); font-size:13px;}
+
+  /* ---------- modal ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:50;}
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--wood-2); border:1px solid var(--line); border-radius:6px; padding:26px;
+    width:380px; max-width:90vw; box-shadow:var(--shadow);
+  }
+  .modal h3{font-family:'Source Serif 4',serif; margin:0 0 18px; font-size:19px;}
+  .modal label{font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--paper-dim); display:block; margin:12px 0 5px;}
+  .modal input, .modal select{
+    width:100%; background:var(--wood); border:1px solid var(--line); color:var(--paper);
+    border-radius:var(--radius); padding:9px 10px; font-size:13px; font-family:'Inter',sans-serif;
+  }
+  .modal input[type=date]{color-scheme:dark; font-family:'IBM Plex Mono',monospace;}
+  .modal .row2{display:flex; gap:10px;}
+  .modal .row2>div{flex:1;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:22px;}
+  .upload-drop{
+    border:1.5px dashed var(--line); border-radius:var(--radius); padding:20px; text-align:center;
+    color:var(--paper-dim); font-size:12.5px; cursor:pointer; margin-top:12px;
+  }
+  .upload-drop.hasfile{border-color:var(--brass); color:var(--brass-bright);}
+
+  ::-webkit-scrollbar{width:9px; height:9px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:5px;}
+
+  @media (max-width:760px){
+    body{flex-direction:column;}
+    .sidebar{width:100%; height:auto; max-height:60vh; flex-direction:column; overflow:visible;}
+    .book-list{flex-direction:column; flex:1; min-height:80px;}
+    .viewer-col{position:static;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cover" id="coverPage">
+  <div class="cover-date" id="coverDate"></div>
+  <div class="cover-lamp"></div>
+  <h1>Maktabah al-Ilm<span class="arabic">مكتبة العلم</span></h1>
+  <div class="tag">Your books, on one shared schedule — laid out and waiting.</div>
+  <div class="cover-stats" id="coverStats"></div>
+  <button class="cover-enter" onclick="enterApp()">Open your desk →</button>
+</div>
+
+<div class="sidebar">
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div>
+      <h1>Maktabah al-Ilm<span class="arabic">مكتبة العلم</span></h1>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" id="navLibrary" onclick="setView('library')">Library</div>
+    <div class="nav-tab" id="navSchedule" onclick="setView('schedule')">Schedule</div>
+    <div class="nav-tab" id="navProgress" onclick="setView('progress')">Progress</div>
+    <div class="nav-tab" id="navCertificates" onclick="setView('certificates')">Certs</div>
+  </div>
+  <div class="book-list" id="bookList"></div>
+  <div class="sidebar-actions">
+    <button class="add-book-btn" onclick="openBookModal()">+ Add a book</button>
+    <button class="add-book-btn" onclick="openCourseModal()">+ Manage course years</button>
+  </div>
+  <div class="sidebar-footer">
+    <button onclick="exportBackup()">⬇ Export backup (.json)</button>
+    <button onclick="document.getElementById('importFile').click()">⬆ Import backup</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <div class="hint">Books &amp; PDFs live in this browser only. Export regularly to keep a copy.</div>
+  </div>
+</div>
+
+<div class="main" id="main">
+  <div class="empty-state">
+    <div class="lamp"></div>
+    <h2>Pull up a chair</h2>
+    <p>Add a book and lay out which pages you'll cover each day on the shared schedule. Check off what you actually study as you go.</p>
+    <button class="btn primary" onclick="openBookModal()">+ Add your first book</button>
+  </div>
+</div>
+
+<!-- Add/Edit Book Modal -->
+<div class="overlay" id="bookModal">
+  <div class="modal">
+    <h3>Add a book</h3>
+    <label>Title</label>
+    <input type="text" id="bTitle" placeholder="e.g. Algebra II">
+    <label>Subject / Course</label>
+    <input type="text" id="bSubject" placeholder="e.g. Mathematics">
+    <label>Total pages</label>
+    <input type="number" id="bPages" placeholder="Auto-fills from PDF if uploaded">
+    <label>PDF file</label>
+    <div class="upload-drop" id="dropZone" onclick="document.getElementById('bFile').click()">Click to choose a PDF (optional — you can add it later)</div>
+    <input type="file" id="bFile" accept="application/pdf" style="display:none">
+    <label>Course year(s)</label>
+    <div class="weekday-picker" id="bookCoursePicker"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('bookModal')">Cancel</button>
+      <button class="btn primary" onclick="saveBook()">Add book</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manage Course Years Modal -->
+<div class="overlay" id="courseModal">
+  <div class="modal">
+    <h3>Course years</h3>
+    <div id="courseListWrap" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; margin-bottom:14px;"></div>
+    <label>New year name</label>
+    <div class="row2">
+      <input type="text" id="cName" placeholder="e.g. Year 3">
+      <button class="btn primary" style="flex:0 0 auto;" onclick="addCourseYear()">+ Add</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('courseModal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Certificate Modal -->
+<div class="overlay" id="certModal">
+  <div class="certificate-wrap">
+    <div class="certificate" id="certificateBody"></div>
+    <div class="modal-actions no-print" style="justify-content:center; margin-top:16px;">
+      <button class="btn ghost" onclick="closeModal('certModal')">Close</button>
+      <button class="btn primary" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Modal -->
+<div class="overlay" id="termModal">
+  <div class="modal">
+    <h3>Schedule</h3>
+    <div style="font-size:12px; color:var(--paper-dim); line-height:1.5; margin-bottom:2px;">Start date, target finish, and school days are shared by every book — they set the one calendar everything runs on. Page range below is just for this book.</div>
+    <div class="row2">
+      <div>
+        <label>Start date</label>
+        <input type="date" id="tStart">
+      </div>
+      <div>
+        <label>Target finish</label>
+        <input type="date" id="tTarget">
+      </div>
+    </div>
+    <div class="row2">
+      <div>
+        <label>From page</label>
+        <input type="number" id="tPageFrom" placeholder="1">
+      </div>
+      <div>
+        <label>To page</label>
+        <input type="number" id="tPageTo" placeholder="e.g. 180">
+      </div>
+    </div>
+    <label>School days (shared)</label>
+    <div class="weekday-picker" id="weekdayPicker"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('termModal')">Cancel</button>
+      <button class="btn primary" onclick="saveTermSchedule()">Save schedule</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- storage helpers ---------------- */
+async function loadBooks(){
+  try{
+    const r = await window.storage.get('books', false);
+    return r ? JSON.parse(r.value) : [];
+  }catch(e){ return []; }
+}
+async function saveBooks(books){
+  try{ await window.storage.set('books', JSON.stringify(books), false); }
+  catch(e){ console.error('save failed', e); }
+}
+async function loadCourses(){
+  try{
+    const r = await window.storage.get('courses', false);
+    return r ? JSON.parse(r.value) : [];
+  }catch(e){ return []; }
+}
+async function saveCourses(courses){
+  try{ await window.storage.set('courses', JSON.stringify(courses), false); }
+  catch(e){ console.error('save failed', e); }
+}
+async function loadSchedule(){
+  try{
+    const r = await window.storage.get('schedule', false);
+    return r ? JSON.parse(r.value) : null;
+  }catch(e){ return null; }
+}
+async function saveSchedule(schedule){
+  try{ await window.storage.set('schedule', JSON.stringify(schedule), false); }
+  catch(e){ console.error('save failed', e); }
+}
+
+/* IndexedDB for PDF binary (window.storage is JSON/text only, capped at 5MB) */
+const DB_NAME='study-desk-pdfs', STORE='pdfs';
+function idbOpen(){
+  return new Promise((res,rej)=>{
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = ()=> req.result.createObjectStore(STORE);
+    req.onsuccess = ()=> res(req.result);
+    req.onerror = ()=> rej(req.error);
+  });
+}
+async function idbPut(id, arrayBuffer){
+  const db = await idbOpen();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(STORE,'readwrite');
+    tx.objectStore(STORE).put(arrayBuffer, id);
+    tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+  });
+}
+async function idbGet(id){
+  const db = await idbOpen();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(STORE,'readonly');
+    const req = tx.objectStore(STORE).get(id);
+    req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error);
+  });
+}
+async function idbDelete(id){
+  const db = await idbOpen();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(STORE,'readwrite');
+    tx.objectStore(STORE).delete(id);
+    tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+  });
+}
+
+/* ---------------- state ---------------- */
+let books = [];
+let activeBookId = null;
+let pendingFile = null;
+let pdfDoc = null;
+let currentPage = 1;
+let loadedPdfForBook = null; // book id whose PDF is currently parsed & cached, so we don't re-read/re-parse it on every re-render
+let isViewerExpanded = false;
+let currentPendingDay = null; // the earliest unfinished day for the active book
+let viewMode = 'library'; // 'library' | 'schedule' | 'progress' | 'certificates'
+let courses = [];
+let selectedBookCourses = [];
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+const DEFAULT_SCHOOL_DAYS = [1,2,4,5]; // Mon, Tue, Thu, Fri
+const WEEKDAY_LABELS = [{v:1,l:'Mon'},{v:2,l:'Tue'},{v:3,l:'Wed'},{v:4,l:'Thu'},{v:5,l:'Fri'},{v:6,l:'Sat'},{v:0,l:'Sun'}];
+let selectedWeekdays = DEFAULT_SCHOOL_DAYS.slice();
+let repaceNotices = {}; // bookId -> message, shown once per load
+
+// One shared schedule (start date, target finish, school days) that every book's daily
+// pages are generated against — this is what makes all books live on the same calendar.
+let schedule = { startDate: null, targetFinishDate: null, schoolDays: DEFAULT_SCHOOL_DAYS.slice() };
+
+/* ---------------- cover page ---------------- */
+function enterApp(){
+  document.getElementById('coverPage').classList.add('hidden');
+}
+function renderCover(){
+  document.getElementById('coverDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+  let totalBooks = books.length, pagesToday = 0, pendingToday = 0;
+  books.forEach(b=>{
+    (b.days||[]).forEach(d=>{
+      if(d.date===todayStr()){
+        pagesToday += (d.pageEnd-d.pageStart+1);
+        if(!d.studied) pendingToday++;
+      }
+    });
+  });
+  document.getElementById('coverStats').innerHTML = `
+    <div class="cstat"><b>${totalBooks}</b><span>Books</span></div>
+    <div class="cstat"><b>${pagesToday}</b><span>Pages today</span></div>
+    <div class="cstat"><b>${pendingToday}</b><span>Waiting on you</span></div>
+  `;
+}
+
+/* ---------------- init ---------------- */
+(async function init(){
+  books = await loadBooks();
+  courses = await loadCourses();
+  const savedSchedule = await loadSchedule();
+  if(savedSchedule) schedule = savedSchedule;
+  autoRepaceAll();
+  await saveBooks(books);
+  renderSidebar();
+  renderCover();
+  if(books.length){ selectBook(books[0].id); }
+})();
+
+/* ---------------- view switching ---------------- */
+function setView(mode){
+  viewMode = mode;
+  document.getElementById('navLibrary').classList.toggle('active', mode==='library');
+  document.getElementById('navSchedule').classList.toggle('active', mode==='schedule');
+  document.getElementById('navProgress').classList.toggle('active', mode==='progress');
+  document.getElementById('navCertificates').classList.toggle('active', mode==='certificates');
+  if(mode==='schedule'){ renderSchedule(); }
+  else if(mode==='progress'){ renderProgress(); }
+  else if(mode==='certificates'){ renderCertificates(); }
+  else { activeBookId ? renderMain() : renderEmpty(); }
+}
+
+function bookStatus(book){
+  const days = book.days||[];
+  if(!days.length) return {label:'No schedule', cls:'behind', pct:0};
+  const studiedPages = days.filter(d=>d.studied).reduce((s,d)=>s+(d.pageEnd-d.pageStart+1),0);
+  const totalPages = (book.pageRangeEnd - book.pageRangeStart + 1) || days.reduce((s,d)=>s+(d.pageEnd-d.pageStart+1),0);
+  const pct = totalPages ? Math.round(studiedPages/totalPages*100) : 0;
+  if(days.every(d=>d.studied)) return {label:'Complete', cls:'complete', pct:100};
+  const today = todayStr();
+  const expectedPages = days.filter(d=>d.date<=today).reduce((s,d)=>s+(d.pageEnd-d.pageStart+1),0);
+  const cls = studiedPages >= expectedPages ? 'ontrack' : 'behind';
+  return {label: cls==='ontrack' ? 'On track' : 'Behind', cls, pct};
+}
+
+function renderProgress(){
+  const today = todayStr();
+  let totalPagesAll=0, studiedPagesAll=0, booksBehind=0;
+  const dueList = [];
+  books.forEach(book=>{
+    const st = bookStatus(book);
+    if(st.cls==='behind') booksBehind++;
+    const days = book.days||[];
+    totalPagesAll += (book.pageRangeEnd - book.pageRangeStart + 1) || 0;
+    studiedPagesAll += days.filter(d=>d.studied).reduce((s,d)=>s+(d.pageEnd-d.pageStart+1),0);
+    days.forEach(d=>{
+      if(!d.studied && d.date<=today){
+        dueList.push({book, day:d, overdue: d.date<today});
+      }
+    });
+  });
+  dueList.sort((a,b)=> a.day.date.localeCompare(b.day.date));
+
+  const dueHtml = dueList.length ? dueList.map(x=>`
+    <div class="due-card ${x.overdue?'overdue':''}">
+      <div class="info">
+        <b>${escapeHtml(x.book.title)}</b>
+        <div class="d">${x.overdue?'Overdue · ':''}${formatDate(x.day.date)} · pages ${x.day.pageStart}–${x.day.pageEnd}</div>
+      </div>
+      <button class="btn primary" onclick="quickMarkDone('${x.book.id}','${x.day.id}')">Mark done</button>
+    </div>
+  `).join('') : `<div class="empty-progress">Nothing outstanding — everything due so far is marked done.</div>`;
+
+  const coursesHtml = books.length ? books.map(book=>{
+    const st = bookStatus(book);
+    return `
+      <div class="course-card">
+        <div class="ctitle">${escapeHtml(book.title)}</div>
+        <div class="csub">${escapeHtml(book.subject||'General study')}</div>
+        <div class="term-progress-row">
+          <div class="tname">Schedule</div>
+          <div class="tbar"><div class="fill" style="width:${st.pct}%"></div></div>
+          <div class="status-badge ${st.cls}">${st.label} · ${st.pct}%</div>
+        </div>
+      </div>`;
+  }).join('') : `<div class="empty-progress">Add a book to see progress here.</div>`;
+
+  document.getElementById('main').innerHTML = `
+    <div class="progress-header">
+      <h2>Progress overview</h2>
+      <div class="sub">Every book, on the one shared schedule.</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><b>${books.length}</b><span>Courses / books</span></div>
+      <div class="stat-card"><b>${totalPagesAll ? Math.round(studiedPagesAll/totalPagesAll*100):0}%</b><span>Pages complete</span></div>
+      <div class="stat-card"><b>${booksBehind}</b><span>Books behind</span></div>
+    </div>
+    <div class="section-label">Due now, across all books</div>
+    ${dueHtml}
+    <div class="section-label">By book</div>
+    ${coursesHtml}
+  `;
+}
+
+async function quickMarkDone(bookId, dayId){
+  const book = books.find(b=>b.id===bookId);
+  const day = book.days.find(d=>d.id===dayId);
+  day.studied = true;
+  await saveBooks(books);
+  renderSidebar();
+  renderProgress();
+}
+
+/* ---------------- shared schedule view (all books, one calendar) ---------------- */
+function renderSchedule(){
+  const entries = [];
+  books.forEach(book=>{
+    (book.days||[]).forEach(d=> entries.push({book, day:d}));
+  });
+  entries.sort((a,b)=> a.day.date.localeCompare(b.day.date) || a.book.title.localeCompare(b.book.title));
+
+  const groups = {};
+  entries.forEach(e=>{ (groups[e.day.date] = groups[e.day.date]||[]).push(e); });
+  const dates = Object.keys(groups).sort();
+  const today = todayStr();
+
+  const bodyHtml = dates.length ? dates.map(date=>{
+    const rows = groups[date].map(e=>`
+      <div class="day-row ${e.day.studied?'studied':''} ${date===today?'today':''}">
+        <div class="dogear ${e.day.studied?'on':''}" onclick="toggleDay('${e.day.id}')"></div>
+        <div class="day-info">
+          <div class="date">${escapeHtml(e.book.title)}</div>
+          <div class="range">pages ${e.day.pageStart}–${e.day.pageEnd}</div>
+        </div>
+        <button class="go" onclick="selectBook('${e.book.id}')">Open book</button>
+      </div>
+    `).join('');
+    return `<div class="section-label">${formatDate(date)}${date===today?' · Today':(date<today?' · Past':'')}</div>${rows}`;
+  }).join('') : `<div class="empty-progress">No schedule yet. Open a book and use "Set up schedule" to start filling in this calendar.</div>`;
+
+  const scheduleSummary = `
+    <div class="schedule-meta">
+      <span>Start <b>${schedule.startDate?formatDate(schedule.startDate):'—'}</b></span>
+      <span>Target finish <b>${schedule.targetFinishDate?formatDate(schedule.targetFinishDate):'—'}</b></span>
+      <span>School days <b>${(schedule.schoolDays||[]).map(v=>WEEKDAY_LABELS.find(w=>w.v===v).l).join(', ')||'—'}</b></span>
+    </div>`;
+
+  document.getElementById('main').innerHTML = `
+    <div class="progress-header">
+      <h2>Shared schedule</h2>
+      <div class="sub">Every book's daily pages, on one calendar.</div>
+    </div>
+    ${scheduleSummary}
+    ${bodyHtml}
+  `;
+}
+
+/* ---------------- certificates ---------------- */
+function renderCertificates(){
+  const completed = books.filter(b=>b.completed);
+  const html = completed.length ? completed.map(b=>`
+    <div class="due-card">
+      <div class="info">
+        <b>${escapeHtml(b.title)}</b>
+        <div class="d">${escapeHtml(b.subject||'—')} · completed ${formatDate(b.completedAt)}</div>
+      </div>
+      <button class="btn primary" onclick="openCertificate('${b.id}')">View certificate</button>
+    </div>
+  `).join('') : `<div class="empty-progress">No books completed yet. Finish a book's schedule, then use "Mark book complete" on its page to earn a certificate.</div>`;
+
+  document.getElementById('main').innerHTML = `
+    <div class="progress-header">
+      <h2>Certificates</h2>
+      <div class="sub">Every book you've completed, with its certificate.</div>
+    </div>
+    ${html}
+  `;
+}
+
+function buildCertificateHtml(book){
+  return `
+    <div class="cert-inner">
+      <div class="cert-eyebrow">شهادة إتمام</div>
+      <div class="cert-eyebrow-en">Certificate of Completion</div>
+      <div class="cert-body">This certifies that the study of</div>
+      <div class="cert-book">${escapeHtml(book.title)}</div>
+      <div class="cert-subject">${escapeHtml(book.subject||'General study')}</div>
+      <div class="cert-body" style="margin-top:22px;">has been completed in full.</div>
+      <div class="cert-footer">
+        <div class="cert-date">Completed on<b>${formatDate(book.completedAt)}</b></div>
+        <div class="cert-seal">✓</div>
+        <div class="cert-brand">Maktabah al-Ilm<br>مكتبة العلم</div>
+      </div>
+    </div>
+  `;
+}
+function openCertificate(bookId){
+  const book = books.find(b=>b.id===bookId);
+  document.getElementById('certificateBody').innerHTML = buildCertificateHtml(book);
+  document.getElementById('certModal').classList.add('show');
+}
+async function markBookComplete(bookId){
+  const book = books.find(b=>b.id===bookId);
+  const ok = confirm(`Mark "${book.title}" as complete? This issues a certificate and adds it to your completed-books record.`);
+  if(!ok) return;
+  book.completed = true;
+  book.completedAt = todayStr();
+  await saveBooks(books);
+  renderSidebar();
+  await renderMain();
+  openCertificate(bookId);
+}
+
+/* ---------------- course years ---------------- */
+function renderBookCoursePicker(){
+  const wrap = document.getElementById('bookCoursePicker');
+  if(!courses.length){ wrap.innerHTML = `<span style="font-size:11.5px; color:var(--paper-dim);">No years yet — add one from "Manage course years" in the sidebar.</span>`; return; }
+  wrap.innerHTML = courses.map(c=>`
+    <div class="weekday-chip ${selectedBookCourses.includes(c.id)?'on':''}" onclick="toggleBookCourse('${c.id}')">${escapeHtml(c.name)}</div>
+  `).join('');
+}
+function toggleBookCourse(id){
+  if(selectedBookCourses.includes(id)) selectedBookCourses = selectedBookCourses.filter(x=>x!==id);
+  else selectedBookCourses.push(id);
+  renderBookCoursePicker();
+}
+function openCourseModal(){
+  renderCourseList();
+  document.getElementById('cName').value = '';
+  document.getElementById('courseModal').classList.add('show');
+}
+function renderCourseList(){
+  const wrap = document.getElementById('courseListWrap');
+  wrap.innerHTML = courses.length ? courses.map(c=>`
+    <div class="course-row">
+      <div class="cname">${escapeHtml(c.name)} <span style="color:var(--paper-dim); font-size:11px;">(${(c.bookIds||[]).length} book${(c.bookIds||[]).length===1?'':'s'})</span></div>
+      <div class="cactions"><button onclick="deleteCourseYear('${c.id}')">Delete</button></div>
+    </div>
+  `).join('') : `<div style="color:var(--paper-dim); font-size:12.5px;">No course years yet.</div>`;
+}
+async function addCourseYear(){
+  const name = document.getElementById('cName').value.trim();
+  if(!name){ return; }
+  courses.push({ id: uid(), name, bookIds: [] });
+  await saveCourses(courses);
+  document.getElementById('cName').value = '';
+  renderCourseList();
+  renderSidebar();
+  if(document.getElementById('bookModal').classList.contains('show')) renderBookCoursePicker();
+}
+async function deleteCourseYear(id){
+  if(!confirm('Delete this course year? Books inside it are kept, just ungrouped.')) return;
+  courses = courses.filter(c=>c.id!==id);
+  await saveCourses(courses);
+  renderCourseList();
+  renderSidebar();
+}
+
+
+function renderSidebar(){
+  const list = document.getElementById('bookList');
+  list.innerHTML = '';
+
+  function bookItemHtml(b){
+    const {studiedDays, totalDays} = bookProgress(b);
+    const pct = totalDays ? Math.round(studiedDays/totalDays*100) : 0;
+    const el = document.createElement('div');
+    el.className = 'book-item' + (b.id===activeBookId ? ' active':'');
+    el.onclick = ()=> selectBook(b.id);
+    el.innerHTML = `
+      <div class="title">${escapeHtml(b.title)} ${b.completed ? '🏅' : ''}</div>
+      <div class="meta">${escapeHtml(b.subject||'—')} · ${b.totalPages||'?'} pg</div>
+      <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>
+    `;
+    return el;
+  }
+
+  if(courses.length){
+    courses.forEach(c=>{
+      const grpBooks = books.filter(b=> (c.bookIds||[]).includes(b.id));
+      const group = document.createElement('div');
+      group.className = 'course-group';
+      const label = document.createElement('div');
+      label.className = 'course-group-label';
+      label.textContent = c.name;
+      group.appendChild(label);
+      grpBooks.forEach(b=> group.appendChild(bookItemHtml(b)));
+      if(!grpBooks.length){
+        const none = document.createElement('div');
+        none.style.cssText='color:var(--paper-dim); font-size:11.5px; padding:2px 4px 6px;';
+        none.textContent = 'No books yet';
+        group.appendChild(none);
+      }
+      list.appendChild(group);
+    });
+    const unassigned = books.filter(b=> !courses.some(c=> (c.bookIds||[]).includes(b.id)));
+    if(unassigned.length){
+      const group = document.createElement('div');
+      group.className = 'course-group';
+      const label = document.createElement('div');
+      label.className = 'course-group-label';
+      label.textContent = 'Unassigned';
+      group.appendChild(label);
+      unassigned.forEach(b=> group.appendChild(bookItemHtml(b)));
+      list.appendChild(group);
+    }
+  } else {
+    books.forEach(b=> list.appendChild(bookItemHtml(b)));
+  }
+}
+
+function bookProgress(b){
+  let studiedDays=0, totalDays=0;
+  (b.days||[]).forEach(d=>{ totalDays++; if(d.studied) studiedDays++; });
+  return {studiedDays, totalDays};
+}
+
+/* ---------------- book modal ---------------- */
+function openBookModal(){
+  document.getElementById('bTitle').value='';
+  document.getElementById('bSubject').value='';
+  document.getElementById('bPages').value='';
+  document.getElementById('dropZone').textContent = 'Click to choose a PDF (optional — you can add it later)';
+  document.getElementById('dropZone').classList.remove('hasfile');
+  pendingFile = null;
+  selectedBookCourses = [];
+  renderBookCoursePicker();
+  document.getElementById('bookModal').classList.add('show');
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+document.getElementById('bFile').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  pendingFile = file;
+  document.getElementById('dropZone').textContent = '📄 ' + file.name;
+  document.getElementById('dropZone').classList.add('hasfile');
+  // try to auto-detect page count
+  try{
+    const buf = await file.arrayBuffer();
+    const doc = await pdfjsLib.getDocument({data: buf.slice(0)}).promise;
+    document.getElementById('bPages').value = doc.numPages;
+    pendingFile._buffer = buf;
+  }catch(err){ console.warn('could not read pdf page count', err); }
+});
+
+async function saveBook(){
+  const title = document.getElementById('bTitle').value.trim();
+  if(!title){ alert('Give the book a title.'); return; }
+  const subject = document.getElementById('bSubject').value.trim();
+  const pages = parseInt(document.getElementById('bPages').value) || null;
+  const id = uid();
+  const book = { id, title, subject, totalPages: pages, hasFile:false, completed:false, completedAt:null,
+    pageRangeStart:null, pageRangeEnd:null, actualFinishDate:null, days:[] };
+  if(pendingFile){
+    const buf = pendingFile._buffer || await pendingFile.arrayBuffer();
+    await idbPut(id, buf);
+    book.hasFile = true;
+  }
+  books.push(book);
+  if(selectedBookCourses.length){
+    courses.forEach(c=>{
+      if(selectedBookCourses.includes(c.id)){
+        c.bookIds = c.bookIds || [];
+        if(!c.bookIds.includes(id)) c.bookIds.push(id);
+      }
+    });
+    await saveCourses(courses);
+  }
+  await saveBooks(books);
+  closeModal('bookModal');
+  renderSidebar();
+  selectBook(id);
+}
+
+async function deleteBook(id){
+  if(!confirm('Remove this book and all its tracking?')) return;
+  books = books.filter(b=>b.id!==id);
+  await saveBooks(books);
+  await idbDelete(id);
+  if(loadedPdfForBook === id){ loadedPdfForBook = null; pdfDoc = null; }
+  courses.forEach(c=>{ c.bookIds = (c.bookIds||[]).filter(bid=>bid!==id); });
+  await saveCourses(courses);
+  activeBookId = books.length ? books[0].id : null;
+  renderSidebar();
+  if(activeBookId) selectBook(activeBookId); else renderEmpty();
+}
+
+/* ---------------- editing a book's course years ---------------- */
+function openBookYearsModal(bookId){
+  selectedBookCourses = courses.filter(c=>(c.bookIds||[]).includes(bookId)).map(c=>c.id);
+  renderCourseList();
+  document.getElementById('cName').value='';
+  document.getElementById('courseModal').classList.add('show');
+  document.getElementById('courseModal').dataset.forBook = bookId;
+  // append quick toggles for this book right under the list
+  const wrap = document.getElementById('courseListWrap');
+  if(courses.length){
+    const toggleRow = document.createElement('div');
+    toggleRow.innerHTML = `<div style="font-size:11px; color:var(--paper-dim); margin:10px 0 6px; text-transform:uppercase; letter-spacing:1px;">Assign this book to:</div>
+      <div class="weekday-picker">${courses.map(c=>`<div class="weekday-chip ${selectedBookCourses.includes(c.id)?'on':''}" onclick="toggleBookYearAssignment('${bookId}','${c.id}')">${escapeHtml(c.name)}</div>`).join('')}</div>`;
+    wrap.appendChild(toggleRow);
+  }
+}
+async function toggleBookYearAssignment(bookId, courseId){
+  const c = courses.find(x=>x.id===courseId);
+  c.bookIds = c.bookIds || [];
+  if(c.bookIds.includes(bookId)) c.bookIds = c.bookIds.filter(id=>id!==bookId);
+  else c.bookIds.push(bookId);
+  await saveCourses(courses);
+  renderSidebar();
+  openBookYearsModal(bookId); // refresh chip states
+}
+
+/* ---------------- selecting a book ---------------- */
+async function selectBook(id){
+  activeBookId = id;
+  viewMode = 'library';
+  document.getElementById('navLibrary').classList.add('active');
+  document.getElementById('navSchedule').classList.remove('active');
+  document.getElementById('navProgress').classList.remove('active');
+  document.getElementById('navCertificates').classList.remove('active');
+  renderSidebar();
+  await renderMain();
+}
+
+function renderEmpty(){
+  document.getElementById('main').innerHTML = `
+    <div class="empty-state">
+      <div class="lamp"></div>
+      <h2>Pull up a chair</h2>
+      <p>Add a book and lay out which pages you'll cover each day on the shared schedule.</p>
+      <button class="btn primary" onclick="openBookModal()">+ Add your first book</button>
+    </div>`;
+}
+
+/* ---------------- main render ---------------- */
+async function renderMain(){
+  const book = books.find(b=>b.id===activeBookId);
+  if(!book){ renderEmpty(); return; }
+
+  document.getElementById('main').innerHTML = `
+    <div class="book-header">
+      <div>
+        <h2>${escapeHtml(book.title)} ${book.completed ? '<span style="font-size:15px; color:var(--brass-bright);">🏅 Completed</span>' : ''}</h2>
+        <div class="subject">${escapeHtml(book.subject||'General study')}</div>
+        <div class="pages">${book.totalPages ? book.totalPages+' pages total' : 'Page count not set'}</div>
+      </div>
+      <div class="header-actions">
+        ${!book.hasFile ? `<button class="btn" onclick="document.getElementById('addFileInput').click()">Attach PDF</button>
+          <input type="file" id="addFileInput" accept="application/pdf" style="display:none">` : ''}
+        <button class="btn" onclick="openBookYearsModal('${book.id}')">Years</button>
+        ${book.completed
+          ? `<button class="btn" onclick="openCertificate('${book.id}')">View certificate</button>`
+          : `<button class="btn primary" onclick="markBookComplete('${book.id}')">Mark book complete</button>`}
+        <button class="btn danger" onclick="deleteBook('${book.id}')">Remove book</button>
+      </div>
+    </div>
+    <div id="bookPanel"></div>
+  `;
+
+  if(!book.hasFile){
+    document.getElementById('addFileInput').addEventListener('change', async (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const buf = await file.arrayBuffer();
+      await idbPut(book.id, buf);
+      if(loadedPdfForBook === book.id){ loadedPdfForBook = null; pdfDoc = null; } // force reload of the freshly-attached file
+      if(!book.totalPages){
+        try{
+          const doc = await pdfjsLib.getDocument({data: buf.slice(0)}).promise;
+          book.totalPages = doc.numPages;
+        }catch(err){}
+      }
+      book.hasFile = true;
+      await saveBooks(books);
+      await renderMain();
+    });
+  }
+
+  renderBookPanel(book);
+}
+
+function bookComplete(book){
+  const days = book.days||[];
+  return days.length>0 && days.every(d=>d.studied);
+}
+
+/* ---------------- book panel (schedule + viewer) ---------------- */
+function renderBookPanel(book){
+  isViewerExpanded = false; // DOM is fully rebuilt below, so drop any stale expanded state
+  const days = (book.days||[]).slice().sort((a,b)=> a.date.localeCompare(b.date));
+  const studiedCount = days.filter(d=>d.studied).length;
+  const pct = days.length ? Math.round(studiedCount/days.length*100) : 0;
+  const isDone = bookComplete(book);
+  if(isDone && !book.actualFinishDate){
+    book.actualFinishDate = todayStr();
+    saveBooks(books);
+  } else if(!isDone && book.actualFinishDate){
+    book.actualFinishDate = null;
+    saveBooks(books);
+  }
+
+  // the earliest not-yet-studied day (chronologically) is the "pending" day.
+  // while it exists, adding further days is locked, and the viewer won't move past its end page without confirming.
+  const pendingDay = days.find(d=>!d.studied) || null;
+  currentPendingDay = pendingDay;
+
+  const rowsHtml = days.map(d=>{
+    const isPending = pendingDay && d.id===pendingDay.id;
+    return `
+    <div class="day-row ${d.studied?'studied':''} ${d.date===todayStr()?'today':''}">
+      <div class="dogear ${d.studied?'on':''}" onclick="toggleDay('${d.id}')"></div>
+      <div class="day-info">
+        <div class="date">${formatDate(d.date)} ${isPending ? '<span style="color:var(--ember); font-size:10px;">· PENDING</span>' : ''}</div>
+        <div class="range">pages ${d.pageStart}–${d.pageEnd}</div>
+      </div>
+      <button class="go" onclick="jumpToPage(${d.pageStart})">${book.hasFile ? 'Open' : 'No PDF'}</button>
+      <button class="del" onclick="deleteDay('${d.id}')">✕</button>
+    </div>
+  `;}).join('') || `<p style="color:var(--paper-dim); font-size:13px;">No daily pages laid out yet — generate a schedule or add the first one below.</p>`;
+
+  const reminderHtml = pendingDay ? `
+    <div class="reminder-banner">
+      <div class="msg"><span class="reminder-dot"></span>Reminder: finish pages <b>${pendingDay.pageStart}–${pendingDay.pageEnd}</b> for <b>${formatDate(pendingDay.date)}</b> before moving on.</div>
+      <button class="btn primary" onclick="toggleDay('${pendingDay.id}')">Mark done</button>
+    </div>` : '';
+
+  let repaceHtml = '';
+  if(repaceNotices[book.id]){
+    repaceHtml = `<div class="repace-banner">🔄 ${repaceNotices[book.id]}</div>`;
+    delete repaceNotices[book.id];
+  }
+
+  const hasRange = book.pageRangeStart && book.pageRangeEnd;
+  const scheduleMetaHtml = `
+    <div class="schedule-meta">
+      <span>Pages <b>${hasRange ? book.pageRangeStart+'–'+book.pageRangeEnd : '—'}</b></span>
+      <span>Shared school days <b>${(schedule.schoolDays||[]).map(v=>WEEKDAY_LABELS.find(w=>w.v===v).l).join(', ')||'—'}</b></span>
+      <button class="btn ghost" style="padding:5px 10px; font-size:11px;" onclick="openScheduleModal()">${hasRange ? 'Edit schedule' : 'Set up schedule'}</button>
+      ${hasRange ? `<button class="btn ghost" style="padding:5px 10px; font-size:11px;" onclick="generateSchedule('${book.id}', ${days.length>0})">${days.length>0 ? 'Re-generate remaining' : 'Generate schedule'}</button>` : ''}
+    </div>`;
+
+  const addFormHtml = pendingDay ? `
+    <div class="lock-notice">
+      <div class="msg">Pages locked until you finish <b>${pendingDay.pageStart}–${pendingDay.pageEnd}</b> (${formatDate(pendingDay.date)}). Mark it done to select the next portion — or untick an earlier day to go back and revise it.</div>
+      <button class="btn" onclick="toggleDay('${pendingDay.id}')">Mark done</button>
+    </div>` : `
+    <div class="add-day-form">
+      <div class="field"><label>Date</label><input type="date" id="dDate" value="${todayStr()}"></div>
+      <div class="field"><label>Page from</label><input type="number" id="dFrom" style="width:70px"></div>
+      <div class="field"><label>Page to</label><input type="number" id="dTo" style="width:70px"></div>
+      <button class="btn primary" style="align-self:flex-end" onclick="addDay()">+ Add day</button>
+    </div>`;
+
+  document.getElementById('bookPanel').innerHTML = `
+    ${repaceHtml}
+    ${reminderHtml}
+    <div class="term-panel">
+      <div class="tracker-col">
+        <div class="ribbon-strip">
+          <div class="rstat">Start<b>${schedule.startDate ? formatDate(schedule.startDate) : '—'}</b></div>
+          <div class="rbar"><div class="fill" style="width:${pct}%"></div></div>
+          <div class="rstat">Target<b>${schedule.targetFinishDate ? formatDate(schedule.targetFinishDate) : '—'}</b></div>
+          <div class="rstat">Finished<b>${book.actualFinishDate ? formatDate(book.actualFinishDate) : '—'}</b></div>
+        </div>
+        ${scheduleMetaHtml}
+        <div id="dayRows">${rowsHtml}</div>
+        ${hasRange ? addFormHtml : ''}
+        ${days.length ? `<button class="btn ghost" style="margin-top:14px" onclick="clearBookSchedule('${book.id}')">Clear this book's schedule</button>` : ''}
+      </div>
+      <div class="viewer-col">
+        <div class="viewer-backdrop" id="viewerBackdrop" onclick="toggleViewerExpand()"></div>
+        <div class="viewer-box" id="viewerBox">
+          <div class="viewer-toolbar">
+            <button onclick="prevPage()">‹</button>
+            <div class="pagejump">Page <input type="number" id="pageInput" value="1" onchange="goToPageInput()"> / <span id="pageTotal">?</span></div>
+            <button onclick="nextPage()">›</button>
+            <button onclick="toggleViewerExpand()" id="expandBtn" title="Enlarge">⤢ Enlarge</button>
+          </div>
+          <div class="viewer-canvas-wrap" id="viewerWrap">
+            <div class="viewer-empty">${book.hasFile ? 'Choose "Open" on a day to jump to its start page.' : 'Attach a PDF to read it here.'}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if(book.hasFile){ loadPdfIntoViewer(book.id); }
+}
+
+function formatDate(iso){
+  const d = new Date(iso+'T00:00:00');
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------------- shared schedule + per-book page range ---------------- */
+function renderWeekdayPicker(){
+  const wrap = document.getElementById('weekdayPicker');
+  wrap.innerHTML = WEEKDAY_LABELS.map(w=>`
+    <div class="weekday-chip ${selectedWeekdays.includes(w.v)?'on':''}" onclick="toggleWeekday(${w.v})">${w.l}</div>
+  `).join('');
+}
+function toggleWeekday(v){
+  if(selectedWeekdays.includes(v)) selectedWeekdays = selectedWeekdays.filter(x=>x!==v);
+  else selectedWeekdays.push(v);
+  renderWeekdayPicker();
+}
+function openScheduleModal(){
+  const book = books.find(b=>b.id===activeBookId);
+  document.getElementById('tStart').value = schedule.startDate || todayStr();
+  document.getElementById('tTarget').value = schedule.targetFinishDate || '';
+  document.getElementById('tPageFrom').value = book.pageRangeStart || 1;
+  document.getElementById('tPageTo').value = book.pageRangeEnd || (book.totalPages || '');
+  selectedWeekdays = (schedule.schoolDays && schedule.schoolDays.length) ? schedule.schoolDays.slice() : DEFAULT_SCHOOL_DAYS.slice();
+  renderWeekdayPicker();
+  document.getElementById('termModal').classList.add('show');
+}
+async function saveTermSchedule(){
+  const from = parseInt(document.getElementById('tPageFrom').value) || 1;
+  const to = parseInt(document.getElementById('tPageTo').value);
+  const start = document.getElementById('tStart').value || null;
+  const target = document.getElementById('tTarget').value || null;
+  if(!to){ alert('Set the last page this book should cover.'); return; }
+  if(!start || !target){ alert('Set both a start date and a target finish date so a schedule can be built.'); return; }
+  if(!selectedWeekdays.length){ alert('Pick at least one school day.'); return; }
+  const book = books.find(b=>b.id===activeBookId);
+  // school days + dates are shared by every book — this is the one calendar they all run on
+  schedule.startDate = start;
+  schedule.targetFinishDate = target;
+  schedule.schoolDays = selectedWeekdays.slice();
+  await saveSchedule(schedule);
+  book.pageRangeStart = from;
+  book.pageRangeEnd = to;
+  buildSchedule(book, start, from); // auto-generate this book's days right away
+  await saveBooks(books);
+  closeModal('termModal');
+  await renderMain();
+}
+async function clearBookSchedule(bookId){
+  if(!confirm("Clear this book's page range and daily schedule?")) return;
+  const book = books.find(b=>b.id===bookId);
+  book.pageRangeStart = null;
+  book.pageRangeEnd = null;
+  book.days = [];
+  book.actualFinishDate = null;
+  await saveBooks(books);
+  await renderMain();
+}
+
+/* ---------------- schedule generation ---------------- */
+function schoolDaysBetween(startISO, endISO, allowedWeekdays){
+  const out = [];
+  let d = new Date(startISO+'T00:00:00');
+  const end = new Date(endISO+'T00:00:00');
+  let guard = 0;
+  while(d <= end && guard < 3650){ // safety cap: ~10 years of days, prevents a mistyped date from freezing the tab
+    if(allowedWeekdays.includes(d.getDay())) out.push(d.toISOString().slice(0,10));
+    d.setDate(d.getDate()+1);
+    guard++;
+  }
+  return out;
+}
+// (Re)builds a book's day list from anchorDate forward, covering pages [resumeFromPage .. book.pageRangeEnd],
+// against the shared schedule's school days and target finish date.
+// Any existing studied days are preserved untouched; unstudied days are replaced.
+function buildSchedule(book, anchorDate, resumeFromPage){
+  const studiedDays = (book.days||[]).filter(d=>d.studied);
+  const totalUnits = book.pageRangeEnd - resumeFromPage + 1;
+  if(totalUnits <= 0){ book.days = studiedDays; return; }
+  const endAnchor = schedule.targetFinishDate < anchorDate ? anchorDate : schedule.targetFinishDate;
+  let schoolDays = schoolDaysBetween(anchorDate, endAnchor, schedule.schoolDays);
+  if(!schoolDays.length) schoolDays = [anchorDate]; // deadline already passed — cram into today
+  const n = schoolDays.length;
+  const perDay = Math.floor(totalUnits/n);
+  const remainder = totalUnits % n;
+  let cursor = resumeFromPage;
+  const generated = schoolDays.map((date,i)=>{
+    const count = perDay + (i < remainder ? 1 : 0);
+    if(count<=0) return null;
+    const pageStart = cursor, pageEnd = cursor+count-1;
+    cursor = pageEnd+1;
+    return { id: uid(), date, pageStart, pageEnd, studied:false };
+  }).filter(Boolean);
+  book.days = studiedDays.concat(generated);
+}
+async function generateSchedule(bookId, isRegenerate){
+  const book = books.find(b=>b.id===bookId);
+  if(isRegenerate){
+    const ok = confirm('This rebuilds the remaining schedule from today, spreading whatever\'s left across the shared school days between now and the target finish. Already-completed days stay as they are. Continue?');
+    if(!ok) return;
+  }
+  const studied = (book.days||[]).filter(d=>d.studied);
+  const maxStudiedPage = studied.length ? Math.max(...studied.map(d=>d.pageEnd)) : book.pageRangeStart-1;
+  const anchor = isRegenerate ? (todayStr() > schedule.startDate ? todayStr() : schedule.startDate) : schedule.startDate;
+  buildSchedule(book, anchor, maxStudiedPage+1);
+  await saveBooks(books);
+  await renderMain();
+}
+
+/* ---------------- auto re-pacing ---------------- */
+function autoRepaceAll(){
+  const today = todayStr();
+  if(!schedule.targetFinishDate) return;
+  books.forEach(book=>{
+    if(!book.days || !book.days.length) return;
+    const missed = book.days.filter(d=>!d.studied && d.date < today);
+    if(!missed.length) return;
+    const missedPages = missed.reduce((s,d)=> s + (d.pageEnd-d.pageStart+1), 0);
+    const studied = book.days.filter(d=>d.studied);
+    const resumeFrom = studied.length ? Math.max(...studied.map(d=>d.pageEnd))+1 : book.pageRangeStart;
+    buildSchedule(book, today, resumeFrom);
+    const remainingDayCount = book.days.filter(d=>!d.studied).length;
+    repaceNotices[book.id] = `Missed ${missed.length} day(s) (${missedPages} pages) — redistributed across the ${remainingDayCount} school day(s) left before ${formatDate(schedule.targetFinishDate)}.`;
+  });
+}
+
+/* ---------------- day CRUD ---------------- */
+// dayId is unique across all books, so these work whether called from the active
+// book's panel or from the global Schedule tab (which can touch any book's days).
+function findDayOwner(dayId){
+  for(const book of books){
+    const day = (book.days||[]).find(d=>d.id===dayId);
+    if(day) return {book, day};
+  }
+  return null;
+}
+async function addDay(){
+  const date = document.getElementById('dDate').value;
+  const from = parseInt(document.getElementById('dFrom').value);
+  const to = parseInt(document.getElementById('dTo').value);
+  if(!date || !from || !to){ alert('Fill in date and a page range.'); return; }
+  const book = books.find(b=>b.id===activeBookId);
+  book.days.push({ id: uid(), date, pageStart: from, pageEnd: to, studied:false });
+  await saveBooks(books);
+  await renderMain();
+}
+async function toggleDay(dayId){
+  const found = findDayOwner(dayId);
+  if(!found) return;
+  found.day.studied = !found.day.studied;
+  await saveBooks(books);
+  if(viewMode==='schedule') renderSchedule(); else await renderMain();
+}
+async function deleteDay(dayId){
+  const found = findDayOwner(dayId);
+  if(!found) return;
+  found.book.days = found.book.days.filter(d=>d.id!==dayId);
+  await saveBooks(books);
+  if(viewMode==='schedule') renderSchedule(); else await renderMain();
+}
+
+/* ---------------- PDF viewer ---------------- */
+async function loadPdfIntoViewer(bookId){
+  // already parsed and cached for this book — just redraw the current page, don't re-read/re-parse the file
+  if(loadedPdfForBook === bookId && pdfDoc){
+    renderPage(currentPage);
+    return;
+  }
+  try{
+    const buf = await idbGet(bookId);
+    if(!buf){
+      document.getElementById('viewerWrap').innerHTML = '<div class="viewer-empty">PDF not found in this browser. Re-attach it.</div>';
+      loadedPdfForBook = null;
+      return;
+    }
+    pdfDoc = await pdfjsLib.getDocument({data: buf.slice(0)}).promise;
+    loadedPdfForBook = bookId;
+    document.getElementById('pageTotal').textContent = pdfDoc.numPages;
+    currentPage = 1;
+    renderPage(currentPage);
+  }catch(e){
+    console.error(e);
+    document.getElementById('viewerWrap').innerHTML = '<div class="viewer-empty">Could not load this PDF.</div>';
+    loadedPdfForBook = null;
+  }
+}
+async function renderPage(num){
+  if(!pdfDoc) return;
+  num = Math.min(Math.max(1,num), pdfDoc.numPages);
+  currentPage = num;
+  const page = await pdfDoc.getPage(num);
+  const viewport = page.getViewport({scale: isViewerExpanded ? 2.4 : 1.3});
+  const wrap = document.getElementById('viewerWrap');
+  wrap.innerHTML = '<canvas id="pdfCanvas"></canvas>';
+  const canvas = document.getElementById('pdfCanvas');
+  canvas.width = viewport.width; canvas.height = viewport.height;
+  await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+  const pi = document.getElementById('pageInput');
+  if(pi) pi.value = num;
+}
+function toggleViewerExpand(){
+  isViewerExpanded = !isViewerExpanded;
+  const box = document.getElementById('viewerBox');
+  const backdrop = document.getElementById('viewerBackdrop');
+  const btn = document.getElementById('expandBtn');
+  if(!box) return;
+  box.classList.toggle('expanded', isViewerExpanded);
+  if(backdrop) backdrop.classList.toggle('show', isViewerExpanded);
+  if(btn) btn.textContent = isViewerExpanded ? '✕ Close' : '⤢ Enlarge';
+  if(pdfDoc) renderPage(currentPage); // re-render at the appropriate scale
+}
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && isViewerExpanded) toggleViewerExpand();
+});
+
+function nextPage(){
+  const target = currentPage+1;
+  if(currentPendingDay && target > currentPendingDay.pageEnd && currentPage <= currentPendingDay.pageEnd){
+    const ok = confirm(`You're about to move past today's assigned pages (${currentPendingDay.pageStart}–${currentPendingDay.pageEnd}), which aren't marked done yet. Keep going anyway?`);
+    if(!ok) return;
+  }
+  renderPage(target);
+}
+function prevPage(){ renderPage(currentPage-1); } // going back is always free
+function goToPageInput(){
+  const target = parseInt(document.getElementById('pageInput').value)||1;
+  if(currentPendingDay && target > currentPendingDay.pageEnd && target > currentPage){
+    const ok = confirm(`That's past today's assigned pages (${currentPendingDay.pageStart}–${currentPendingDay.pageEnd}), which aren't marked done yet. Keep going anyway?`);
+    if(!ok){ document.getElementById('pageInput').value = currentPage; return; }
+  }
+  renderPage(target);
+}
+function jumpToPage(p){
+  if(!pdfDoc){ return; }
+  renderPage(p);
+  document.getElementById('viewerWrap').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ---------------- backup export / import ---------------- */
+function exportBackup(){
+  const payload = { exportedAt: new Date().toISOString(), books, courses, schedule };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `maktabah-al-ilm-backup-${todayStr()}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+document.getElementById('importFile').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const incoming = Array.isArray(data) ? data : data.books;
+    const incomingCourses = Array.isArray(data.courses) ? data.courses : [];
+    const incomingSchedule = (data.schedule && typeof data.schedule==='object') ? data.schedule : null;
+    if(!Array.isArray(incoming)) throw new Error('bad format');
+    const replace = confirm(`Import ${incoming.length} book(s)? Click OK to replace your current library, or Cancel to merge alongside it.`);
+    if(replace){
+      books = incoming;
+      courses = incomingCourses;
+      if(incomingSchedule) schedule = incomingSchedule;
+    } else {
+      const existingIds = new Set(books.map(b=>b.id));
+      incoming.forEach(b=>{ if(!existingIds.has(b.id)) books.push(b); });
+      const existingCourseIds = new Set(courses.map(c=>c.id));
+      incomingCourses.forEach(c=>{ if(!existingCourseIds.has(c.id)) courses.push(c); });
+      // shared schedule: keep the current one when merging, since it governs books already in the library
+    }
+    await saveBooks(books);
+    await saveCourses(courses);
+    await saveSchedule(schedule);
+    activeBookId = books.length ? books[0].id : null;
+    renderSidebar();
+    if(activeBookId) selectBook(activeBookId); else renderEmpty();
+    alert('Import complete. Note: PDF files themselves are not included in a backup — re-attach each book\'s PDF if needed.');
+  }catch(err){
+    alert('Could not read that file — make sure it\'s a Maktabah al-Ilm backup JSON.');
+  }
+  e.target.value = '';
+});
+</script>
+</body>
+</html>
