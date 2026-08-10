@@ -85,17 +85,31 @@
   .icon-btn.dashed{border-style:dashed;}
   .icon-btn.linked{border-color:var(--moss); color:var(--brass-bright);}
   .book-item{
-    padding:11px 12px; border-radius:var(--radius); cursor:pointer;
+    padding:4px 8px; border-radius:4px; cursor:pointer;
     border:1px solid transparent;
-    display:flex; flex-direction:column; gap:3px;
+    display:flex; align-items:center; gap:8px;
     transition:background .15s, border-color .15s;
+    line-height:1.2;
   }
   .book-item:hover{background:rgba(199,154,75,.08);}
   .book-item.active{background:rgba(199,154,75,.14); border-color:rgba(199,154,75,.4);}
-  .book-item .title{font-family:'Source Serif 4',serif; font-size:14.5px; font-weight:600; color:var(--paper);}
-  .book-item .meta{font-size:11px; color:var(--paper-dim); font-family:'IBM Plex Mono',monospace;}
-  .book-item .barwrap{height:3px; background:rgba(255,255,255,.08); border-radius:2px; margin-top:4px; overflow:hidden;}
+  .book-item .title{font-family:'Source Serif 4',serif; font-size:12.5px; font-weight:600; color:var(--paper);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1 1 auto; min-width:0;}
+  .book-item .meta{font-size:10px; color:var(--paper-dim); font-family:'IBM Plex Mono',monospace;
+    white-space:nowrap; flex:0 0 auto;}
+  .book-item .barwrap{height:3px; width:34px; flex:0 0 auto; background:rgba(255,255,255,.08); border-radius:2px; overflow:hidden;}
   .book-item .bar{height:100%; background:linear-gradient(90deg, var(--moss), var(--brass));}
+  /* small round action buttons (book detail header) */
+  .btn-round{
+    width:34px; height:34px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; cursor:pointer; border:1px solid transparent; color:#fff;
+    transition:transform .1s, filter .1s;
+  }
+  .btn-round:hover{filter:brightness(1.12); transform:translateY(-1px);}
+  .btn-round.years{background:#4a6fa5;}
+  .btn-round.complete{background:var(--moss, #5c8a4a);}
+  .btn-round.danger{background:#b5484f;}
 
   .hint{font-size:10px; color:var(--paper-dim); opacity:.7; line-height:1.5;}
 
@@ -521,6 +535,9 @@
     </div>
     <label>School days (shared)</label>
     <div class="weekday-picker" id="weekdayPicker"></div>
+    <label style="margin-top:14px;">This subject's days (pick from above — aim for 2 subjects/day)</label>
+    <div class="weekday-picker" id="assignedDayPicker"></div>
+    <div id="dayCountReadout" style="font-size:11.5px; color:var(--paper-dim); font-family:'IBM Plex Mono',monospace; margin-top:8px; line-height:1.6;"></div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeModal('termModal')">Cancel</button>
       <button class="btn primary" onclick="saveTermSchedule()">Save schedule</button>
@@ -755,10 +772,27 @@ let selectedBookCourses = [];
 
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function todayStr(){ return new Date().toISOString().slice(0,10); }
-const DEFAULT_SCHOOL_DAYS = [1,2,4,5]; // Mon, Tue, Thu, Fri
+const DEFAULT_SCHOOL_DAYS = [1,2,4,5,6]; // Mon, Tue, Thu, Fri, Sat
 const WEEKDAY_LABELS = [{v:1,l:'Mon'},{v:2,l:'Tue'},{v:3,l:'Wed'},{v:4,l:'Thu'},{v:5,l:'Fri'},{v:6,l:'Sat'},{v:0,l:'Sun'}];
 let selectedWeekdays = DEFAULT_SCHOOL_DAYS.slice();
+let selectedAssignedDays = []; // this book's own subset of selectedWeekdays, set in the schedule modal
 let repaceNotices = {}; // bookId -> message, shown once per load
+
+// One-time migration: give the known subject pairs their day assignment (2 subjects/day)
+// so existing books land on Mon+Thu / Tue+Fri / Sat instead of every school day at once.
+function migrateAssignedDays(){
+  const pairMap = [
+    { days:[1,4], keywords:['tafseer','muqadima','muqaddima'] }, // Mon, Thu
+    { days:[2,5], keywords:['hadeeth','hadith','fiqh'] },        // Tue, Fri
+    { days:[6],   keywords:['arabic','taareekh','tareekh','tarikh'] } // Sat
+  ];
+  books.forEach(book=>{
+    if(book.assignedDays && book.assignedDays.length) return; // already set, leave it
+    const hay = ((book.subject||'') + ' ' + (book.title||'')).toLowerCase();
+    const match = pairMap.find(p => p.keywords.some(k => hay.includes(k)));
+    if(match) book.assignedDays = match.days.slice();
+  });
+}
 
 // One shared schedule (start date, target finish, school days) that every book's daily
 // pages are generated against — this is what makes all books live on the same calendar.
@@ -792,6 +826,7 @@ function renderCover(){
   courses = await loadCourses();
   const savedSchedule = await loadSchedule();
   if(savedSchedule) schedule = savedSchedule;
+  migrateAssignedDays();
   autoRepaceAll();
   await saveBooks(books);
   renderSidebar();
@@ -1051,9 +1086,10 @@ function renderSidebar(){
     el.className = 'book-item' + (b.id===activeBookId ? ' active':'');
     el.onclick = ()=> selectBook(b.id);
     el.innerHTML = `
-      <div class="title">${escapeHtml(b.title)} ${b.completed ? '🏅' : ''}</div>
-      <div class="meta">${escapeHtml(b.subject||'—')} · ${b.totalPages||'?'} pg</div>
+      <div class="title">${escapeHtml(b.title)}${b.completed ? ' 🏅' : ''}</div>
+      <div class="meta">${escapeHtml(b.subject||'—')} · ${b.totalPages||'?'}pg</div>
       <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>
+      <div class="meta" style="width:28px; text-align:right;">${pct}%</div>
     `;
     return el;
   }
@@ -1134,7 +1170,7 @@ async function saveBook(){
   const pages = parseInt(document.getElementById('bPages').value) || null;
   const id = uid();
   const book = { id, title, subject, totalPages: pages, hasFile:false, completed:false, completedAt:null,
-    pageRangeStart:null, pageRangeEnd:null, actualFinishDate:null, days:[] };
+    pageRangeStart:null, pageRangeEnd:null, actualFinishDate:null, days:[], assignedDays:[] };
   if(pendingFile){
     const buf = pendingFile._buffer || await pendingFile.arrayBuffer();
     await idbPut(id, buf);
@@ -1232,11 +1268,11 @@ async function renderMain(){
       <div class="header-actions">
         ${!book.hasFile ? `<button class="btn" onclick="document.getElementById('addFileInput').click()">Attach PDF</button>
           <input type="file" id="addFileInput" accept="application/pdf" style="display:none">` : ''}
-        <button class="btn" onclick="openBookYearsModal('${book.id}')">Years</button>
+        <button class="btn-round years" onclick="openBookYearsModal('${book.id}')" title="Years">🗂</button>
         ${book.completed
-          ? `<button class="btn" onclick="openCertificate('${book.id}')">View certificate</button>`
-          : `<button class="btn primary" onclick="markBookComplete('${book.id}')">Mark book complete</button>`}
-        <button class="btn danger" onclick="deleteBook('${book.id}')">Remove book</button>
+          ? `<button class="btn-round complete" onclick="openCertificate('${book.id}')" title="View certificate">🏅</button>`
+          : `<button class="btn-round complete" onclick="markBookComplete('${book.id}')" title="Mark book complete">✓</button>`}
+        <button class="btn-round danger" onclick="deleteBook('${book.id}')" title="Remove book">🗑</button>
       </div>
     </div>
     <div id="bookPanel"></div>
@@ -1320,6 +1356,7 @@ function renderBookPanel(book){
     <div class="schedule-meta">
       <span>Pages <b>${hasRange ? book.pageRangeStart+'–'+book.pageRangeEnd : '—'}</b></span>
       <span>Shared school days <b>${(schedule.schoolDays||[]).map(v=>WEEKDAY_LABELS.find(w=>w.v===v).l).join(', ')||'—'}</b></span>
+      <span>This subject's days <b>${(book.assignedDays && book.assignedDays.length) ? book.assignedDays.map(v=>WEEKDAY_LABELS.find(w=>w.v===v).l).join(', ') : 'all shared days'}</b></span>
       <button class="btn ghost" style="padding:5px 10px; font-size:11px;" onclick="openScheduleModal()">${hasRange ? 'Edit schedule' : 'Set up schedule'}</button>
       ${hasRange ? `<button class="btn ghost" style="padding:5px 10px; font-size:11px;" onclick="generateSchedule('${book.id}', ${days.length>0})">${days.length>0 ? 'Re-generate remaining' : 'Generate schedule'}</button>` : ''}
     </div>`;
@@ -1388,7 +1425,44 @@ function renderWeekdayPicker(){
 function toggleWeekday(v){
   if(selectedWeekdays.includes(v)) selectedWeekdays = selectedWeekdays.filter(x=>x!==v);
   else selectedWeekdays.push(v);
+  selectedAssignedDays = selectedAssignedDays.filter(x=>selectedWeekdays.includes(x)); // drop assigned days no longer shared
   renderWeekdayPicker();
+  renderAssignedDayPicker();
+}
+// How many subjects (books) are currently assigned to each shared school day, using each
+// book's own assignedDays where set (falling back to the full shared set otherwise).
+// excludeBookId lets the modal show counts as if the book being edited weren't counted yet,
+// then add its live in-progress selection on top.
+function computeDayCounts(excludeBookId){
+  const counts = {};
+  selectedWeekdays.forEach(v=> counts[v]=0);
+  books.forEach(b=>{
+    if(b.id===excludeBookId) return;
+    const days = (b.assignedDays && b.assignedDays.length) ? b.assignedDays : schedule.schoolDays;
+    days.forEach(d=>{ if(d in counts) counts[d]++; });
+  });
+  return counts;
+}
+function renderAssignedDayPicker(){
+  const wrap = document.getElementById('assignedDayPicker');
+  wrap.innerHTML = selectedWeekdays.map(v=>{
+    const w = WEEKDAY_LABELS.find(x=>x.v===v);
+    return `<div class="weekday-chip ${selectedAssignedDays.includes(v)?'on':''}" onclick="toggleAssignedDay(${v})">${w.l}</div>`;
+  }).join('');
+  const counts = computeDayCounts(activeBookId);
+  selectedAssignedDays.forEach(v=> counts[v] = (counts[v]||0) + 1);
+  const readout = document.getElementById('dayCountReadout');
+  readout.innerHTML = selectedWeekdays.map(v=>{
+    const w = WEEKDAY_LABELS.find(x=>x.v===v);
+    const c = counts[v]||0;
+    const flag = c===2 ? '' : ' ⚠';
+    return `${w.l}: ${c} subject${c===1?'':'s'}${flag}`;
+  }).join(' &nbsp;·&nbsp; ');
+}
+function toggleAssignedDay(v){
+  if(selectedAssignedDays.includes(v)) selectedAssignedDays = selectedAssignedDays.filter(x=>x!==v);
+  else selectedAssignedDays.push(v);
+  renderAssignedDayPicker();
 }
 function openScheduleModal(){
   const book = books.find(b=>b.id===activeBookId);
@@ -1397,7 +1471,9 @@ function openScheduleModal(){
   document.getElementById('tPageFrom').value = book.pageRangeStart || 1;
   document.getElementById('tPageTo').value = book.pageRangeEnd || (book.totalPages || '');
   selectedWeekdays = (schedule.schoolDays && schedule.schoolDays.length) ? schedule.schoolDays.slice() : DEFAULT_SCHOOL_DAYS.slice();
+  selectedAssignedDays = (book.assignedDays && book.assignedDays.length) ? book.assignedDays.slice() : selectedWeekdays.slice();
   renderWeekdayPicker();
+  renderAssignedDayPicker();
   document.getElementById('termModal').classList.add('show');
 }
 async function saveTermSchedule(){
@@ -1408,6 +1484,7 @@ async function saveTermSchedule(){
   if(!to){ alert('Set the last page this book should cover.'); return; }
   if(!start || !target){ alert('Set both a start date and a target finish date so a schedule can be built.'); return; }
   if(!selectedWeekdays.length){ alert('Pick at least one school day.'); return; }
+  if(!selectedAssignedDays.length){ alert("Pick at least one day for this subject."); return; }
   const book = books.find(b=>b.id===activeBookId);
   // school days + dates are shared by every book — this is the one calendar they all run on
   schedule.startDate = start;
@@ -1416,6 +1493,7 @@ async function saveTermSchedule(){
   await saveSchedule(schedule);
   book.pageRangeStart = from;
   book.pageRangeEnd = to;
+  book.assignedDays = selectedAssignedDays.slice();
   buildSchedule(book, start, from); // auto-generate this book's days right away
   await saveBooks(books);
   closeModal('termModal');
@@ -1453,7 +1531,12 @@ function buildSchedule(book, anchorDate, resumeFromPage){
   const totalUnits = book.pageRangeEnd - resumeFromPage + 1;
   if(totalUnits <= 0){ book.days = studiedDays; return; }
   const endAnchor = schedule.targetFinishDate < anchorDate ? anchorDate : schedule.targetFinishDate;
-  let schoolDays = schoolDaysBetween(anchorDate, endAnchor, schedule.schoolDays);
+  // Use this book's own assigned days if set (2-subjects-per-day split); otherwise fall back
+  // to the full shared school-day set (old behavior).
+  let allowedDays = (book.assignedDays && book.assignedDays.length) ? book.assignedDays : schedule.schoolDays;
+  allowedDays = allowedDays.filter(d => (schedule.schoolDays||[]).includes(d)); // never schedule outside the shared school days
+  if(!allowedDays.length) allowedDays = schedule.schoolDays;
+  let schoolDays = schoolDaysBetween(anchorDate, endAnchor, allowedDays);
   if(!schoolDays.length) schoolDays = [anchorDate]; // deadline already passed — cram into today
   const n = schoolDays.length;
   const perDay = Math.floor(totalUnits/n);
