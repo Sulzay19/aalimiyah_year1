@@ -1,0 +1,750 @@
+{
+  "exportedAt": "2026-08-10T05:50:59.127Z",
+  "books": [
+    {
+      "id": "msmrhsn2sbqj1",
+      "title": "KALIMAAT QURAAN",
+      "subject": "",
+      "totalPages": 75,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 12,
+      "pageRangeEnd": 75,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msmsvgta68h1o",
+          "date": "2026-08-21",
+          "pageStart": 12,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbvk2fl",
+          "date": "2026-08-28",
+          "pageStart": 19,
+          "pageEnd": 25,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbvpb21",
+          "date": "2026-09-04",
+          "pageStart": 26,
+          "pageEnd": 32,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtb20otz",
+          "date": "2026-09-11",
+          "pageStart": 33,
+          "pageEnd": 39,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbyflxw",
+          "date": "2026-09-18",
+          "pageStart": 40,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbdbf3v",
+          "date": "2026-09-25",
+          "pageStart": 46,
+          "pageEnd": 51,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtb3w8xq",
+          "date": "2026-10-02",
+          "pageStart": 52,
+          "pageEnd": 57,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbbpj4v",
+          "date": "2026-10-09",
+          "pageStart": 58,
+          "pageEnd": 63,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbb5hsv",
+          "date": "2026-10-16",
+          "pageStart": 64,
+          "pageEnd": 69,
+          "studied": false
+        },
+        {
+          "id": "msmsvgtbtogfc",
+          "date": "2026-10-23",
+          "pageStart": 70,
+          "pageEnd": 75,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        6
+      ]
+    },
+    {
+      "id": "msmrk1j2wqy2v",
+      "title": "TAFSEER",
+      "subject": "",
+      "totalPages": 172,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 172,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msmswzshtrhdv",
+          "date": "2026-08-16",
+          "pageStart": 1,
+          "pageEnd": 6,
+          "studied": false
+        },
+        {
+          "id": "msmswzshkxa5e",
+          "date": "2026-08-19",
+          "pageStart": 7,
+          "pageEnd": 12,
+          "studied": false
+        },
+        {
+          "id": "msmswzsh343c7",
+          "date": "2026-08-21",
+          "pageStart": 13,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msmswzshgd7kg",
+          "date": "2026-08-23",
+          "pageStart": 19,
+          "pageEnd": 24,
+          "studied": false
+        },
+        {
+          "id": "msmswzshelwi4",
+          "date": "2026-08-26",
+          "pageStart": 25,
+          "pageEnd": 30,
+          "studied": false
+        },
+        {
+          "id": "msmswzshweype",
+          "date": "2026-08-28",
+          "pageStart": 31,
+          "pageEnd": 36,
+          "studied": false
+        },
+        {
+          "id": "msmswzshf3tj4",
+          "date": "2026-08-30",
+          "pageStart": 37,
+          "pageEnd": 42,
+          "studied": false
+        },
+        {
+          "id": "msmswzshv04x8",
+          "date": "2026-09-02",
+          "pageStart": 43,
+          "pageEnd": 48,
+          "studied": false
+        },
+        {
+          "id": "msmswzshynyqa",
+          "date": "2026-09-04",
+          "pageStart": 49,
+          "pageEnd": 54,
+          "studied": false
+        },
+        {
+          "id": "msmswzsh934t7",
+          "date": "2026-09-06",
+          "pageStart": 55,
+          "pageEnd": 60,
+          "studied": false
+        },
+        {
+          "id": "msmswzshe5frf",
+          "date": "2026-09-09",
+          "pageStart": 61,
+          "pageEnd": 66,
+          "studied": false
+        },
+        {
+          "id": "msmswzsh412vb",
+          "date": "2026-09-11",
+          "pageStart": 67,
+          "pageEnd": 72,
+          "studied": false
+        },
+        {
+          "id": "msmswzshcrall",
+          "date": "2026-09-13",
+          "pageStart": 73,
+          "pageEnd": 78,
+          "studied": false
+        },
+        {
+          "id": "msmswzshfta7d",
+          "date": "2026-09-16",
+          "pageStart": 79,
+          "pageEnd": 84,
+          "studied": false
+        },
+        {
+          "id": "msmswzshokfp3",
+          "date": "2026-09-18",
+          "pageStart": 85,
+          "pageEnd": 90,
+          "studied": false
+        },
+        {
+          "id": "msmswzshfj49x",
+          "date": "2026-09-20",
+          "pageStart": 91,
+          "pageEnd": 96,
+          "studied": false
+        },
+        {
+          "id": "msmswzshym7we",
+          "date": "2026-09-23",
+          "pageStart": 97,
+          "pageEnd": 102,
+          "studied": false
+        },
+        {
+          "id": "msmswzsh9hyc3",
+          "date": "2026-09-25",
+          "pageStart": 103,
+          "pageEnd": 108,
+          "studied": false
+        },
+        {
+          "id": "msmswzsheqmsb",
+          "date": "2026-09-27",
+          "pageStart": 109,
+          "pageEnd": 114,
+          "studied": false
+        },
+        {
+          "id": "msmswzshwo6mb",
+          "date": "2026-09-30",
+          "pageStart": 115,
+          "pageEnd": 120,
+          "studied": false
+        },
+        {
+          "id": "msmswzsh7f84m",
+          "date": "2026-10-02",
+          "pageStart": 121,
+          "pageEnd": 126,
+          "studied": false
+        },
+        {
+          "id": "msmswzshemj22",
+          "date": "2026-10-04",
+          "pageStart": 127,
+          "pageEnd": 132,
+          "studied": false
+        },
+        {
+          "id": "msmswzshhmwqm",
+          "date": "2026-10-07",
+          "pageStart": 133,
+          "pageEnd": 137,
+          "studied": false
+        },
+        {
+          "id": "msmswzsh7oo86",
+          "date": "2026-10-09",
+          "pageStart": 138,
+          "pageEnd": 142,
+          "studied": false
+        },
+        {
+          "id": "msmswzshknubi",
+          "date": "2026-10-11",
+          "pageStart": 143,
+          "pageEnd": 147,
+          "studied": false
+        },
+        {
+          "id": "msmswzshrhur6",
+          "date": "2026-10-14",
+          "pageStart": 148,
+          "pageEnd": 152,
+          "studied": false
+        },
+        {
+          "id": "msmswzshzs329",
+          "date": "2026-10-16",
+          "pageStart": 153,
+          "pageEnd": 157,
+          "studied": false
+        },
+        {
+          "id": "msmswzshptbox",
+          "date": "2026-10-18",
+          "pageStart": 158,
+          "pageEnd": 162,
+          "studied": false
+        },
+        {
+          "id": "msmswzshj384v",
+          "date": "2026-10-21",
+          "pageStart": 163,
+          "pageEnd": 167,
+          "studied": false
+        },
+        {
+          "id": "msmswzshg80zy",
+          "date": "2026-10-23",
+          "pageStart": 168,
+          "pageEnd": 172,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        6,
+        1,
+        4
+      ]
+    },
+    {
+      "id": "msmrkps7ds43r",
+      "title": "HADEETH",
+      "subject": "",
+      "totalPages": 90,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 90,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msmsxvjwsco37",
+          "date": "2026-08-19",
+          "pageStart": 1,
+          "pageEnd": 9,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjwo50cr",
+          "date": "2026-08-26",
+          "pageStart": 10,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjw0y94q",
+          "date": "2026-09-02",
+          "pageStart": 19,
+          "pageEnd": 27,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjw3c231",
+          "date": "2026-09-09",
+          "pageStart": 28,
+          "pageEnd": 36,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjwgbn12",
+          "date": "2026-09-16",
+          "pageStart": 37,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjwzp6m9",
+          "date": "2026-09-23",
+          "pageStart": 46,
+          "pageEnd": 54,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjw5kc5p",
+          "date": "2026-09-30",
+          "pageStart": 55,
+          "pageEnd": 63,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjwrd6jz",
+          "date": "2026-10-07",
+          "pageStart": 64,
+          "pageEnd": 72,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjwx75k8",
+          "date": "2026-10-14",
+          "pageStart": 73,
+          "pageEnd": 81,
+          "studied": false
+        },
+        {
+          "id": "msmsxvjwjq20k",
+          "date": "2026-10-21",
+          "pageStart": 82,
+          "pageEnd": 90,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        4
+      ]
+    },
+    {
+      "id": "msmrligx9ghx1",
+      "title": "USOOL MUQADIMAH",
+      "subject": "",
+      "totalPages": 115,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 35,
+      "pageRangeEnd": 115,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msmszcgzpqcpw",
+          "date": "2026-08-17",
+          "pageStart": 35,
+          "pageEnd": 43,
+          "studied": false
+        },
+        {
+          "id": "msmszcgzz0njw",
+          "date": "2026-08-24",
+          "pageStart": 44,
+          "pageEnd": 51,
+          "studied": false
+        },
+        {
+          "id": "msmszcgzm3pse",
+          "date": "2026-08-31",
+          "pageStart": 52,
+          "pageEnd": 59,
+          "studied": false
+        },
+        {
+          "id": "msmszcgztzcdb",
+          "date": "2026-09-07",
+          "pageStart": 60,
+          "pageEnd": 67,
+          "studied": false
+        },
+        {
+          "id": "msmszcgz8jpj6",
+          "date": "2026-09-14",
+          "pageStart": 68,
+          "pageEnd": 75,
+          "studied": false
+        },
+        {
+          "id": "msmszcgzvkikx",
+          "date": "2026-09-21",
+          "pageStart": 76,
+          "pageEnd": 83,
+          "studied": false
+        },
+        {
+          "id": "msmszcgz1lfr4",
+          "date": "2026-09-28",
+          "pageStart": 84,
+          "pageEnd": 91,
+          "studied": false
+        },
+        {
+          "id": "msmszcgzxv9ya",
+          "date": "2026-10-05",
+          "pageStart": 92,
+          "pageEnd": 99,
+          "studied": false
+        },
+        {
+          "id": "msmszcgzy6ir9",
+          "date": "2026-10-12",
+          "pageStart": 100,
+          "pageEnd": 107,
+          "studied": false
+        },
+        {
+          "id": "msmszcgzvrkwr",
+          "date": "2026-10-19",
+          "pageStart": 108,
+          "pageEnd": 115,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        2
+      ]
+    },
+    {
+      "id": "msmrm7x1v9lo4",
+      "title": "FIQH",
+      "subject": "",
+      "totalPages": 90,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 54,
+      "pageRangeEnd": 90,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msmt0t1mec3ii",
+          "date": "2026-08-17",
+          "pageStart": 54,
+          "pageEnd": 57,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mwfzel",
+          "date": "2026-08-24",
+          "pageStart": 58,
+          "pageEnd": 61,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mol4gj",
+          "date": "2026-08-31",
+          "pageStart": 62,
+          "pageEnd": 65,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mlw57h",
+          "date": "2026-09-07",
+          "pageStart": 66,
+          "pageEnd": 69,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mp988u",
+          "date": "2026-09-14",
+          "pageStart": 70,
+          "pageEnd": 73,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mar50k",
+          "date": "2026-09-21",
+          "pageStart": 74,
+          "pageEnd": 77,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mbkrxc",
+          "date": "2026-09-28",
+          "pageStart": 78,
+          "pageEnd": 81,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1m4cs0s",
+          "date": "2026-10-05",
+          "pageStart": 82,
+          "pageEnd": 84,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1m01elm",
+          "date": "2026-10-12",
+          "pageStart": 85,
+          "pageEnd": 87,
+          "studied": false
+        },
+        {
+          "id": "msmt0t1mlwf13",
+          "date": "2026-10-19",
+          "pageStart": 88,
+          "pageEnd": 90,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        2
+      ]
+    },
+    {
+      "id": "msmrmu6bwubm0",
+      "title": "TAREEKH",
+      "subject": "",
+      "totalPages": 145,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 5,
+      "pageRangeEnd": 145,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msmt1onb1wqkx",
+          "date": "2026-08-16",
+          "pageStart": 5,
+          "pageEnd": 12,
+          "studied": false
+        },
+        {
+          "id": "msmt1onc1ve1s",
+          "date": "2026-08-19",
+          "pageStart": 13,
+          "pageEnd": 19,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncs34q9",
+          "date": "2026-08-23",
+          "pageStart": 20,
+          "pageEnd": 26,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncryspv",
+          "date": "2026-08-26",
+          "pageStart": 27,
+          "pageEnd": 33,
+          "studied": false
+        },
+        {
+          "id": "msmt1onccppc6",
+          "date": "2026-08-30",
+          "pageStart": 34,
+          "pageEnd": 40,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncuok9b",
+          "date": "2026-09-02",
+          "pageStart": 41,
+          "pageEnd": 47,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncg01rf",
+          "date": "2026-09-06",
+          "pageStart": 48,
+          "pageEnd": 54,
+          "studied": false
+        },
+        {
+          "id": "msmt1onchz90q",
+          "date": "2026-09-09",
+          "pageStart": 55,
+          "pageEnd": 61,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncx820c",
+          "date": "2026-09-13",
+          "pageStart": 62,
+          "pageEnd": 68,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncp18vy",
+          "date": "2026-09-16",
+          "pageStart": 69,
+          "pageEnd": 75,
+          "studied": false
+        },
+        {
+          "id": "msmt1onc0uydh",
+          "date": "2026-09-20",
+          "pageStart": 76,
+          "pageEnd": 82,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncniht0",
+          "date": "2026-09-23",
+          "pageStart": 83,
+          "pageEnd": 89,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncfevrs",
+          "date": "2026-09-27",
+          "pageStart": 90,
+          "pageEnd": 96,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncvognt",
+          "date": "2026-09-30",
+          "pageStart": 97,
+          "pageEnd": 103,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncjmezf",
+          "date": "2026-10-04",
+          "pageStart": 104,
+          "pageEnd": 110,
+          "studied": false
+        },
+        {
+          "id": "msmt1onctlhd6",
+          "date": "2026-10-07",
+          "pageStart": 111,
+          "pageEnd": 117,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncpglgr",
+          "date": "2026-10-11",
+          "pageStart": 118,
+          "pageEnd": 124,
+          "studied": false
+        },
+        {
+          "id": "msmt1onc2dtgp",
+          "date": "2026-10-14",
+          "pageStart": 125,
+          "pageEnd": 131,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncp8otd",
+          "date": "2026-10-18",
+          "pageStart": 132,
+          "pageEnd": 138,
+          "studied": false
+        },
+        {
+          "id": "msmt1oncjovns",
+          "date": "2026-10-21",
+          "pageStart": 139,
+          "pageEnd": 145,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        1,
+        4
+      ]
+    }
+  ],
+  "courses": [],
+  "schedule": {
+    "startDate": "2026-08-17",
+    "targetFinishDate": "2026-10-24",
+    "schoolDays": [
+      1,
+      4,
+      6
+    ]
+  }
+}
