@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-10T05:50:59.127Z",
+  "exportedAt": "2026-08-10T08:54:34.028Z",
   "books": [
     {
       "id": "msmrhsn2sbqj1",
@@ -14,70 +14,70 @@
       "actualFinishDate": null,
       "days": [
         {
-          "id": "msmsvgta68h1o",
+          "id": "msmxtd63gwnqr",
           "date": "2026-08-21",
           "pageStart": 12,
           "pageEnd": 18,
           "studied": false
         },
         {
-          "id": "msmsvgtbvk2fl",
+          "id": "msmxtd63lmkfv",
           "date": "2026-08-28",
           "pageStart": 19,
           "pageEnd": 25,
           "studied": false
         },
         {
-          "id": "msmsvgtbvpb21",
+          "id": "msmxtd63f7ay3",
           "date": "2026-09-04",
           "pageStart": 26,
           "pageEnd": 32,
           "studied": false
         },
         {
-          "id": "msmsvgtb20otz",
+          "id": "msmxtd63jirhp",
           "date": "2026-09-11",
           "pageStart": 33,
           "pageEnd": 39,
           "studied": false
         },
         {
-          "id": "msmsvgtbyflxw",
+          "id": "msmxtd63i1j9b",
           "date": "2026-09-18",
           "pageStart": 40,
           "pageEnd": 45,
           "studied": false
         },
         {
-          "id": "msmsvgtbdbf3v",
+          "id": "msmxtd63v0gmd",
           "date": "2026-09-25",
           "pageStart": 46,
           "pageEnd": 51,
           "studied": false
         },
         {
-          "id": "msmsvgtb3w8xq",
+          "id": "msmxtd63vcp7c",
           "date": "2026-10-02",
           "pageStart": 52,
           "pageEnd": 57,
           "studied": false
         },
         {
-          "id": "msmsvgtbbpj4v",
+          "id": "msmxtd639y23x",
           "date": "2026-10-09",
           "pageStart": 58,
           "pageEnd": 63,
           "studied": false
         },
         {
-          "id": "msmsvgtbb5hsv",
+          "id": "msmxtd632mysy",
           "date": "2026-10-16",
           "pageStart": 64,
           "pageEnd": 69,
           "studied": false
         },
         {
-          "id": "msmsvgtbtogfc",
+          "id": "msmxtd63hdauu",
           "date": "2026-10-23",
           "pageStart": 70,
           "pageEnd": 75,
