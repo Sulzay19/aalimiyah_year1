@@ -364,7 +364,7 @@
   .viewer-toolbar button:hover{border-color:var(--brass); color:var(--brass-bright);}
   .viewer-canvas-wrap{max-height:640px; overflow:auto; display:flex; justify-content:center; padding:14px; background:#1a1613;}
   .viewer-box.expanded .viewer-canvas-wrap{max-height:none; flex:1;}
-  #pdfCanvas{box-shadow:0 4px 18px rgba(0,0,0,.5); max-width:100%;}
+  #pdfCanvas{box-shadow:0 4px 18px rgba(0,0,0,.5); display:block;}
   .viewer-empty{padding:60px 20px; text-align:center; color:var(--paper-dim); font-size:13px;}
 
   /* ---------- modal ---------- */
@@ -1701,6 +1701,7 @@ async function renderPage(num){
   wrap.innerHTML = '<canvas id="pdfCanvas"></canvas>';
   const canvas = document.getElementById('pdfCanvas');
   canvas.width = viewport.width; canvas.height = viewport.height;
+  canvas.style.maxWidth = zoomScale <= 1 ? '100%' : 'none'; // let zoomed-in pages exceed the column width and scroll, instead of being squeezed back down to fit
   await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
   const pi = document.getElementById('pageInput');
   if(pi) pi.value = num;
