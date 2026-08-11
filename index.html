@@ -654,6 +654,8 @@
       <div class="style-chip" data-style="recall" onclick="setTestStyle('recall')">Recall / fill-in</div>
       <div class="style-chip" data-style="mcq" onclick="setTestStyle('mcq')">Multiple choice</div>
     </div>
+    <label style="margin-top:14px;">Number of questions</label>
+    <input type="number" id="testCount" min="1" max="30" value="8" style="width:90px;">
 
     <div class="test-step">
       <div class="test-step-label">1. Copy the study prompt</div>
@@ -1396,16 +1398,21 @@ async function buildTestPrompt(){
     recall: 'recall / fill-in-the-blank style questions, suited for memorization review',
     mcq: 'multiple choice questions, each with 4 options labeled A-D',
   };
-  const count = Math.min(10, Math.max(4, days.length*2));
+  const countInput = parseInt(document.getElementById('testCount').value);
+  const count = Math.min(30, Math.max(1, countInput || 8));
   const schema = testStyle === 'mcq'
     ? `{"questions":[{"question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"correctOption":"B"}]}`
     : `{"questions":[{"question":"...","answer":"..."}]}`;
   const schemaNote = testStyle === 'mcq'
     ? '"correctOption" must be exactly one of the letters A, B, C, or D, matching the correct option.'
-    : 'For "recall / fill-in" questions, phrase the question with a blank (e.g. using ___) and put only the missing word or phrase in "answer".';
+    : 'For "recall / fill-in" questions, phrase the question with a blank (e.g. using ___) and put only the missing word or phrase in "answer". For short-answer questions, keep the expected "answer" itself short (a few words, not a full sentence) so it can be checked easily.';
   return `You are creating a test for a student covering everything they studied in "${book.subject||'this subject'}" (book: "${book.title}") between ${from} and ${to}, spanning ${days.length} study session(s).
 
-Generate exactly ${count} ${formatInstructions[testStyle]} that draw from across the full range below, not just one part of it. Return ONLY valid JSON, no markdown fences, no preamble, in this exact shape:
+Generate exactly ${count} ${formatInstructions[testStyle]} that draw from across the full range below, not just one part of it.
+
+Use easy, simple English — short sentences, plain everyday words, no jargon beyond what's necessary for the subject. Write as if for a student who is still building their vocabulary.
+
+Return ONLY valid JSON, no markdown fences, no preamble, in this exact shape:
 
 ${schema}
 
@@ -1471,6 +1478,22 @@ function normalizeAnswer(s){
   return (s||'').toLowerCase().trim().replace(/[^\w\s]/g,'').replace(/\s+/g,' ');
 }
 
+const ANSWER_STOPWORDS = new Set(['a','an','the','is','are','was','were','it','to','of','in','on','at','and','or']);
+function answersMatch(typed, expected){
+  const a = normalizeAnswer(typed);
+  const b = normalizeAnswer(expected);
+  if(!a || !b) return false;
+  if(a === b) return true;
+  if(b.length > 2 && (a.includes(b) || b.includes(a))) return true;
+  // word-overlap fallback: most of the meaningful words line up
+  const words = s => s.split(' ').filter(w=>w && !ANSWER_STOPWORDS.has(w));
+  const aw = new Set(words(a)), bw = new Set(words(b));
+  if(bw.size === 0) return false;
+  let overlap = 0;
+  bw.forEach(w=>{ if(aw.has(w)) overlap++; });
+  return overlap / bw.size >= 0.6;
+}
+
 function startFullscreenTest(book, questions, style, from, to){
   examQuestions = questions;
   examStyle = style;
@@ -1529,7 +1552,7 @@ function renderExam(){
   const feedbackHtml = checked ? `
     <div class="exam-feedback ${correct?'ok':'no'}">
       <div class="exam-feedback-head">${correct ? '✓ Correct' : '✗ Not quite'}</div>
-      ${(!correct) ? `<div class="exam-feedback-ans">Answer: ${escapeHtml(examStyle==='mcq' ? (q.correctOption+'. '+ (q.options.find(o=>o.startsWith(q.correctOption))||'').replace(/^[A-D][.)]\s*/,'') ) : q.answer)}</div>` : ''}
+      <div class="exam-feedback-ans">Correct answer: ${escapeHtml(correctAnswerText(q))}</div>
       ${examStyle!=='mcq' && !correct ? `<button class="exam-override" onclick="overrideExamCorrect(true)">That's actually right — mark correct</button>` : ''}
     </div>` : '';
 
@@ -1559,6 +1582,14 @@ function renderExam(){
     </div>`;
 }
 
+function correctAnswerText(q){
+  if(examStyle === 'mcq'){
+    const opt = (q.options||[]).find(o=>o.startsWith(q.correctOption));
+    return (q.correctOption||'') + '. ' + (opt ? opt.replace(/^[A-D][.)]\s*/,'') : '');
+  }
+  return q.answer || '';
+}
+
 function selectExamOption(letter){
   examAnswers[examIndex] = letter;
   renderExam();
@@ -1575,9 +1606,7 @@ function checkExamAnswer(){
     const val = typed ? typed.value : (examAnswers[examIndex]||'');
     examAnswers[examIndex] = val;
     if(!val.trim()) return;
-    const a = normalizeAnswer(val);
-    const b = normalizeAnswer(q.answer);
-    isCorrect = a === b || (b.length>2 && (a.includes(b) || b.includes(a)));
+    isCorrect = answersMatch(val, q.answer);
   }
   examChecked[examIndex] = true;
   examCorrect[examIndex] = isCorrect;
@@ -1618,7 +1647,7 @@ function renderExamSummary(){
             <li class="exam-review-item ${examCorrect[i]?'ok':'no'}">
               <div class="exam-review-q">${i+1}. ${escapeHtml(q.question)}</div>
               <div class="exam-review-a">Your answer: ${escapeHtml(examStyle==='mcq' ? (examAnswers[i]||'—') : (examAnswers[i]||'—'))} ${examCorrect[i] ? '✓' : '✗'}</div>
-              ${!examCorrect[i] ? `<div class="exam-review-correct">Correct: ${escapeHtml(examStyle==='mcq' ? (q.correctOption+'. '+(q.options.find(o=>o.startsWith(q.correctOption))||'').replace(/^[A-D][.)]\s*/,'')) : q.answer)}</div>` : ''}
+              ${!examCorrect[i] ? `<div class="exam-review-correct">Correct: ${escapeHtml(correctAnswerText(q))}</div>` : ''}
             </li>`).join('')}
         </ol>
         <div class="exam-actions" style="justify-content:center;">
