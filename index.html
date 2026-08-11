@@ -239,6 +239,12 @@
   .day-row .go:hover{border-color:var(--gold); color:var(--gold-deep);}
   .day-row .del{background:transparent; border:none; color:var(--line); cursor:pointer; font-size:14px; padding:4px;}
   .day-row .del:hover{color:var(--ember);}
+  .day-fold-toggle{
+    display:block; width:100%; text-align:left; background:transparent; border:1px dashed var(--line);
+    border-radius:var(--radius); color:var(--ink-dim); font-size:12px; padding:8px 12px; margin-bottom:6px;
+    cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .day-fold-toggle:hover{border-color:var(--gold); color:var(--gold-deep);}
 
   .add-day-form{
     display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:center;
@@ -925,6 +931,7 @@ const WEEKDAY_LABELS = [{v:1,l:'Mon'},{v:2,l:'Tue'},{v:3,l:'Wed'},{v:4,l:'Thu'},
 let selectedWeekdays = DEFAULT_SCHOOL_DAYS.slice();
 let selectedAssignedDays = []; // this book's own subset of selectedWeekdays, set in the schedule modal
 let repaceNotices = {}; // bookId -> message, shown once per load
+let dayListExpanded = {}; // bookId -> {before:bool, after:bool} — collapses the long day list by default
 
 // One-time migration: give the known subject pairs their day assignment (2 subjects/day)
 // so existing books land on Mon+Thu / Tue+Fri / Sat instead of every school day at once.
@@ -1891,7 +1898,7 @@ function renderBookPanel(book){
   const pendingDay = days.find(d=>!d.studied) || null;
   currentPendingDay = pendingDay;
 
-  const rowsHtml = days.map(d=>{
+  const dayRow = d=>{
     const isPending = pendingDay && d.id===pendingDay.id;
     return `
     <div class="day-row ${d.studied?'studied':''} ${d.date===todayStr()?'today':''}">
@@ -1903,7 +1910,38 @@ function renderBookPanel(book){
       <button class="go" onclick="jumpToPage(${d.pageStart})">${book.hasFile ? 'Open' : 'No PDF'}</button>
       <button class="del" onclick="deleteDay('${d.id}')">✕</button>
     </div>
-  `;}).join('') || `<p style="color:var(--paper-dim); font-size:13px;">No daily pages laid out yet — generate a schedule or add the first one below.</p>`;
+  `;};
+
+  // Fold the list: only today's/pending day plus a handful of upcoming days show by
+  // default. Earlier (already-studied) days and further-out upcoming days collapse
+  // behind toggles, so a long schedule doesn't turn into one giant scroll.
+  const VISIBLE_AHEAD = 4;
+  const pendingIdx = pendingDay ? days.findIndex(d=>d.id===pendingDay.id) : days.length;
+  const beforeDays = days.slice(0, pendingIdx);
+  const centerDays = pendingDay ? [pendingDay] : [];
+  const afterDaysAll = days.slice(pendingIdx + (pendingDay?1:0));
+  const afterVisible = afterDaysAll.slice(0, VISIBLE_AHEAD);
+  const afterHidden = afterDaysAll.slice(VISIBLE_AHEAD);
+
+  const state = dayListExpanded[book.id] || (dayListExpanded[book.id] = {before:false, after:false});
+
+  const beforeToggleHtml = beforeDays.length ? `
+    <button class="day-fold-toggle" onclick="toggleDaySection('${book.id}','before')">
+      ${state.before ? '▾ Hide earlier days' : `▸ Show ${beforeDays.length} earlier day${beforeDays.length===1?'':'s'}`}
+    </button>` : '';
+  const afterToggleHtml = afterHidden.length ? `
+    <button class="day-fold-toggle" onclick="toggleDaySection('${book.id}','after')">
+      ${state.after ? '▴ Hide later days' : `▾ Show ${afterHidden.length} more day${afterHidden.length===1?'':'s'}`}
+    </button>` : '';
+
+  const rowsHtml = days.length ? `
+    ${beforeToggleHtml}
+    ${state.before ? beforeDays.map(dayRow).join('') : ''}
+    ${centerDays.map(dayRow).join('')}
+    ${afterVisible.map(dayRow).join('')}
+    ${state.after ? afterHidden.map(dayRow).join('') : ''}
+    ${afterToggleHtml}
+  ` : `<p style="color:var(--paper-dim); font-size:13px;">No daily pages laid out yet — generate a schedule or add the first one below.</p>`;
 
   const reminderHtml = pendingDay ? `
     <div class="reminder-banner">
@@ -1976,6 +2014,12 @@ function renderBookPanel(book){
   `;
 
   if(book.hasFile){ loadPdfIntoViewer(book.id); }
+}
+
+function toggleDaySection(bookId, section){
+  const state = dayListExpanded[bookId] || (dayListExpanded[bookId] = {before:false, after:false});
+  state[section] = !state[section];
+  renderBookPanel(books.find(b=>b.id===bookId));
 }
 
 function formatDate(iso){
