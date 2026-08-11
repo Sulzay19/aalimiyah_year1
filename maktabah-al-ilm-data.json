@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-11T07:37:32.437Z",
+  "exportedAt": "2026-08-11T10:38:41.784Z",
   "books": [
     {
       "id": "msn1bro5p5blq",
@@ -9,225 +9,296 @@
       "hasFile": true,
       "completed": false,
       "completedAt": null,
-      "pageRangeStart": 37,
-      "pageRangeEnd": 172,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 100,
       "actualFinishDate": null,
       "days": [
         {
-          "id": "msn1qw6yx33my",
+          "id": "msoiuqu2quh6q",
           "date": "2026-08-16",
-          "pageStart": 37,
-          "pageEnd": 41,
+          "pageStart": 1,
+          "pageEnd": 3,
           "studied": false
         },
         {
-          "id": "msn1qw6yaob82",
+          "id": "msoiuqu2fe8rt",
           "date": "2026-08-19",
-          "pageStart": 42,
-          "pageEnd": 46,
+          "pageStart": 4,
+          "pageEnd": 6,
           "studied": false
         },
         {
-          "id": "msn1qw6yquk4z",
+          "id": "msoiuqu2uotqs",
+          "date": "2026-08-20",
+          "pageStart": 7,
+          "pageEnd": 9,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2hwcb8",
           "date": "2026-08-21",
-          "pageStart": 47,
+          "pageStart": 10,
+          "pageEnd": 12,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2n7ak8",
+          "date": "2026-08-23",
+          "pageStart": 13,
+          "pageEnd": 15,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2v5v5j",
+          "date": "2026-08-26",
+          "pageStart": 16,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2r7s2g",
+          "date": "2026-08-27",
+          "pageStart": 19,
+          "pageEnd": 21,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2av7d5",
+          "date": "2026-08-28",
+          "pageStart": 22,
+          "pageEnd": 24,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2oen9y",
+          "date": "2026-08-30",
+          "pageStart": 25,
+          "pageEnd": 27,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2kofad",
+          "date": "2026-09-02",
+          "pageStart": 28,
+          "pageEnd": 30,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2py3p6",
+          "date": "2026-09-03",
+          "pageStart": 31,
+          "pageEnd": 33,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2rlgfc",
+          "date": "2026-09-04",
+          "pageStart": 34,
+          "pageEnd": 36,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2tut73",
+          "date": "2026-09-06",
+          "pageStart": 37,
+          "pageEnd": 39,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu217sme",
+          "date": "2026-09-09",
+          "pageStart": 40,
+          "pageEnd": 42,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2dbl1v",
+          "date": "2026-09-10",
+          "pageStart": 43,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2s19w7",
+          "date": "2026-09-11",
+          "pageStart": 46,
+          "pageEnd": 48,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2scqjr",
+          "date": "2026-09-13",
+          "pageStart": 49,
           "pageEnd": 51,
           "studied": false
         },
         {
-          "id": "msn1qw6y31x0f",
-          "date": "2026-08-23",
+          "id": "msoiuqu2icirl",
+          "date": "2026-09-16",
           "pageStart": 52,
-          "pageEnd": 56,
+          "pageEnd": 54,
           "studied": false
         },
         {
-          "id": "msn1qw6ye4gqu",
-          "date": "2026-08-26",
-          "pageStart": 57,
-          "pageEnd": 61,
+          "id": "msoiuqu20jcvn",
+          "date": "2026-09-17",
+          "pageStart": 55,
+          "pageEnd": 57,
           "studied": false
         },
         {
-          "id": "msn1qw6yq4klq",
-          "date": "2026-08-28",
-          "pageStart": 62,
+          "id": "msoiuqu25ggp1",
+          "date": "2026-09-18",
+          "pageStart": 58,
+          "pageEnd": 60,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2km8f1",
+          "date": "2026-09-20",
+          "pageStart": 61,
+          "pageEnd": 62,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2lj5pw",
+          "date": "2026-09-23",
+          "pageStart": 63,
+          "pageEnd": 64,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2o2e8y",
+          "date": "2026-09-24",
+          "pageStart": 65,
           "pageEnd": 66,
           "studied": false
         },
         {
-          "id": "msn1qw6yq6b5h",
-          "date": "2026-08-30",
+          "id": "msoiuqu21sfns",
+          "date": "2026-09-25",
           "pageStart": 67,
-          "pageEnd": 71,
+          "pageEnd": 68,
           "studied": false
         },
         {
-          "id": "msn1qw6y682ul",
-          "date": "2026-09-02",
-          "pageStart": 72,
+          "id": "msoiuqu2pma92",
+          "date": "2026-09-27",
+          "pageStart": 69,
+          "pageEnd": 70,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2p9fkx",
+          "date": "2026-09-30",
+          "pageStart": 71,
+          "pageEnd": 72,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2uiks5",
+          "date": "2026-10-01",
+          "pageStart": 73,
+          "pageEnd": 74,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2gi8da",
+          "date": "2026-10-02",
+          "pageStart": 75,
           "pageEnd": 76,
           "studied": false
         },
         {
-          "id": "msn1qw6yz9i75",
-          "date": "2026-09-04",
+          "id": "msoiuqu2i3hjj",
+          "date": "2026-10-04",
           "pageStart": 77,
-          "pageEnd": 81,
+          "pageEnd": 78,
           "studied": false
         },
         {
-          "id": "msn1qw6yt2os6",
-          "date": "2026-09-06",
-          "pageStart": 82,
+          "id": "msoiuqu2gq5eh",
+          "date": "2026-10-07",
+          "pageStart": 79,
+          "pageEnd": 80,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2vyo8d",
+          "date": "2026-10-08",
+          "pageStart": 81,
+          "pageEnd": 82,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2w23wv",
+          "date": "2026-10-09",
+          "pageStart": 83,
+          "pageEnd": 84,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2vs2ty",
+          "date": "2026-10-11",
+          "pageStart": 85,
           "pageEnd": 86,
           "studied": false
         },
         {
-          "id": "msn1qw6y4eyb0",
-          "date": "2026-09-09",
+          "id": "msoiuqu2mdx3b",
+          "date": "2026-10-14",
           "pageStart": 87,
-          "pageEnd": 91,
+          "pageEnd": 88,
           "studied": false
         },
         {
-          "id": "msn1qw6yt7mho",
-          "date": "2026-09-11",
-          "pageStart": 92,
+          "id": "msoiuqu2r9ukf",
+          "date": "2026-10-15",
+          "pageStart": 89,
+          "pageEnd": 90,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu228ck1",
+          "date": "2026-10-16",
+          "pageStart": 91,
+          "pageEnd": 92,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2efyso",
+          "date": "2026-10-18",
+          "pageStart": 93,
+          "pageEnd": 94,
+          "studied": false
+        },
+        {
+          "id": "msoiuqu2ls3pm",
+          "date": "2026-10-21",
+          "pageStart": 95,
           "pageEnd": 96,
           "studied": false
         },
         {
-          "id": "msn1qw6ydm0b7",
-          "date": "2026-09-13",
+          "id": "msoiuqu22b15c",
+          "date": "2026-10-22",
           "pageStart": 97,
-          "pageEnd": 101,
+          "pageEnd": 98,
           "studied": false
         },
         {
-          "id": "msn1qw6y2awja",
-          "date": "2026-09-16",
-          "pageStart": 102,
-          "pageEnd": 106,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6yi5yoa",
-          "date": "2026-09-18",
-          "pageStart": 107,
-          "pageEnd": 111,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6ypve56",
-          "date": "2026-09-20",
-          "pageStart": 112,
-          "pageEnd": 116,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6ynbytw",
-          "date": "2026-09-23",
-          "pageStart": 117,
-          "pageEnd": 120,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6yz6mh9",
-          "date": "2026-09-25",
-          "pageStart": 121,
-          "pageEnd": 124,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6y38wjj",
-          "date": "2026-09-27",
-          "pageStart": 125,
-          "pageEnd": 128,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6yr5po2",
-          "date": "2026-09-30",
-          "pageStart": 129,
-          "pageEnd": 132,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6yb189t",
-          "date": "2026-10-02",
-          "pageStart": 133,
-          "pageEnd": 136,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6yzjx5s",
-          "date": "2026-10-04",
-          "pageStart": 137,
-          "pageEnd": 140,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6ytzyas",
-          "date": "2026-10-07",
-          "pageStart": 141,
-          "pageEnd": 144,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6y4rpm2",
-          "date": "2026-10-09",
-          "pageStart": 145,
-          "pageEnd": 148,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6ylyqa8",
-          "date": "2026-10-11",
-          "pageStart": 149,
-          "pageEnd": 152,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6y9qvb4",
-          "date": "2026-10-14",
-          "pageStart": 153,
-          "pageEnd": 156,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6y4omue",
-          "date": "2026-10-16",
-          "pageStart": 157,
-          "pageEnd": 160,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6ycw5ss",
-          "date": "2026-10-18",
-          "pageStart": 161,
-          "pageEnd": 164,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6y248tv",
-          "date": "2026-10-21",
-          "pageStart": 165,
-          "pageEnd": 168,
-          "studied": false
-        },
-        {
-          "id": "msn1qw6ywfi8i",
+          "id": "msoiuqu2e8n4j",
           "date": "2026-10-23",
-          "pageStart": 169,
-          "pageEnd": 172,
+          "pageStart": 99,
+          "pageEnd": 100,
           "studied": false
         }
       ],
       "assignedDays": [
         4,
         1,
-        6
+        6,
+        5
       ]
     },
     {
@@ -254,21 +325,21 @@
           "date": "2026-08-21",
           "pageStart": 54,
           "pageEnd": 55,
-          "studied": false
+          "studied": true
         },
         {
           "id": "msn1t7a7wkwai",
           "date": "2026-08-24",
           "pageStart": 56,
           "pageEnd": 57,
-          "studied": false
+          "studied": true
         },
         {
           "id": "msn1t7a77k626",
           "date": "2026-08-26",
           "pageStart": 58,
           "pageEnd": 59,
-          "studied": false
+          "studied": true
         },
         {
           "id": "msn1t7a7382fb",
@@ -856,7 +927,7 @@
           "date": "2026-08-16",
           "pageStart": 12,
           "pageEnd": 13,
-          "studied": false
+          "studied": true
         },
         {
           "id": "msn1y4s67sl20",
@@ -1148,7 +1219,8 @@
       4,
       6,
       2,
-      1
+      1,
+      5
     ]
   }
 }
