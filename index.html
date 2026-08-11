@@ -154,6 +154,13 @@
   .quiz-item .reveal{background:transparent; border:none; color:var(--brass-bright); font-size:11.5px; cursor:pointer; padding:0;}
   .quiz-item .ans{margin-top:8px; background:rgba(199,154,75,.1); border:1px solid rgba(199,154,75,.3); border-radius:var(--radius); padding:8px 10px; font-size:12.5px; color:var(--paper);}
   .spinner-dot{width:7px;height:7px;border-radius:50%; background:var(--brass); display:inline-block; margin-right:6px; animation:pulse 1.1s ease-in-out infinite;}
+  .test-step{margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);}
+  .test-step-label{font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--brass-bright); font-family:'IBM Plex Mono',monospace; margin-bottom:6px;}
+  #testPasteBack{
+    width:100%; background:var(--wood); border:1px solid var(--line); color:var(--paper);
+    border-radius:var(--radius); padding:9px 10px; font-size:12px; font-family:'IBM Plex Mono',monospace;
+    resize:vertical;
+  }
 
   .hint{font-size:10px; color:var(--paper-dim); opacity:.7; line-height:1.5;}
 
@@ -572,11 +579,21 @@
       <div class="style-chip" data-style="recall" onclick="setTestStyle('recall')">Recall / fill-in</div>
       <div class="style-chip" data-style="mcq" onclick="setTestStyle('mcq')">Multiple choice</div>
     </div>
-    <label style="margin-top:14px;">Anthropic API key <span style="text-transform:none; letter-spacing:0; color:var(--paper-dim);">(saved in this browser only)</span></label>
-    <input type="password" id="testApiKey" placeholder="sk-ant-...">
+
+    <div class="test-step">
+      <div class="test-step-label">1. Copy the study prompt</div>
+      <div class="test-status" style="margin-top:0;">Pulls the text from the studied pages in range and builds a ready-to-paste prompt.</div>
+      <button class="btn primary" id="testCopyBtn" style="margin-top:8px;" onclick="copyTestPrompt()">📋 Copy prompt</button>
+    </div>
+
+    <div class="test-step">
+      <div class="test-step-label">2. Paste it into a Claude chat, then paste the reply back here</div>
+      <textarea id="testPasteBack" rows="5" placeholder="Paste Claude's reply here…"></textarea>
+      <button class="btn primary" style="margin-top:8px;" onclick="loadTestFromPaste()">Load test</button>
+    </div>
+
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeModal('testModal')">Close</button>
-      <button class="btn primary" id="testGenBtn" onclick="generateTest()">Generate test</button>
     </div>
     <div id="testStatus" class="test-status"></div>
     <div id="testResults"></div>
@@ -1233,7 +1250,7 @@ function openTestModal(bookId){
   const days = testStudiedDays(book);
   document.getElementById('testFrom').value = days.length ? days[0].date : todayStr();
   document.getElementById('testTo').value = days.length ? days[days.length-1].date : todayStr();
-  document.getElementById('testApiKey').value = localStorage.getItem('anthropicApiKey') || '';
+  document.getElementById('testPasteBack').value = '';
   document.getElementById('testResults').innerHTML = '';
   document.getElementById('testStatus').textContent = days.length ? '' : 'No studied days yet for this book — mark some pages done first.';
   document.getElementById('testStatus').className = 'test-status';
@@ -1277,52 +1294,37 @@ async function extractPdfText(bookId, pageStart, pageEnd){
   return out.join('\n');
 }
 
-async function generateTest(){
+async function buildTestPrompt(){
   const book = books.find(b=>b.id===testBookId);
-  if(!book) return;
+  if(!book) return null;
   if(!book.hasFile){
-    document.getElementById('testStatus').textContent = 'Attach this book\'s PDF first — questions are generated from its text.';
+    document.getElementById('testStatus').textContent = 'Attach this book\'s PDF first — the prompt needs its text.';
     document.getElementById('testStatus').className = 'test-status err';
-    return;
+    return null;
   }
-  const apiKey = document.getElementById('testApiKey').value.trim();
-  if(!apiKey){
-    document.getElementById('testStatus').textContent = 'Add your Anthropic API key above to generate questions.';
-    document.getElementById('testStatus').className = 'test-status err';
-    return;
-  }
-  localStorage.setItem('anthropicApiKey', apiKey);
-
   const from = document.getElementById('testFrom').value;
   const to = document.getElementById('testTo').value;
   const days = testStudiedDays(book).filter(d=>(!from||d.date>=from)&&(!to||d.date<=to));
   if(!days.length){
     document.getElementById('testStatus').textContent = 'No studied pages fall in that date range.';
     document.getElementById('testStatus').className = 'test-status err';
-    return;
+    return null;
   }
 
-  const btn = document.getElementById('testGenBtn');
-  btn.disabled = true;
-  document.getElementById('testResults').innerHTML = '';
-  document.getElementById('testStatus').innerHTML = '<span class="spinner-dot"></span>Reading pages and writing questions…';
-  document.getElementById('testStatus').className = 'test-status';
+  const chunks = [];
+  for(const d of days){
+    const text = await extractPdfText(book.id, d.pageStart, d.pageEnd);
+    chunks.push(`[${formatDate(d.date)}, pages ${d.pageStart}-${d.pageEnd}]\n${text}`);
+  }
+  const combined = chunks.join('\n\n').slice(0, 18000); // keep prompt to a sane size
 
-  try{
-    const chunks = [];
-    for(const d of days){
-      const text = await extractPdfText(book.id, d.pageStart, d.pageEnd);
-      chunks.push(`[${formatDate(d.date)}, pages ${d.pageStart}-${d.pageEnd}]\n${text}`);
-    }
-    const combined = chunks.join('\n\n').slice(0, 18000); // keep prompt to a sane size
-
-    const formatInstructions = {
-      short: 'short-answer comprehension questions',
-      recall: 'recall / fill-in-the-blank style questions, suited for memorization review',
-      mcq: 'multiple choice questions, each with 4 options labeled A-D',
-    };
-    const count = Math.min(10, Math.max(4, days.length*2));
-    const prompt = `You are creating a test for a student covering everything they studied in "${escapeHtml(book.subject||'this subject')}" (book: "${escapeHtml(book.title)}") between ${from} and ${to}, spanning ${days.length} study session(s).
+  const formatInstructions = {
+    short: 'short-answer comprehension questions',
+    recall: 'recall / fill-in-the-blank style questions, suited for memorization review',
+    mcq: 'multiple choice questions, each with 4 options labeled A-D',
+  };
+  const count = Math.min(10, Math.max(4, days.length*2));
+  return `You are creating a test for a student covering everything they studied in "${book.subject||'this subject'}" (book: "${book.title}") between ${from} and ${to}, spanning ${days.length} study session(s).
 
 Generate exactly ${count} ${formatInstructions[testStyle]} that draw from across the full range below, not just one part of it. Return ONLY valid JSON, no markdown fences, no preamble, in this exact shape:
 
@@ -1334,36 +1336,45 @@ Studied material:
 """
 ${combined}
 """`;
+}
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: prompt }],
-      }),
-    });
-    const data = await response.json();
-    if(data.error){ throw new Error(data.error.message || 'API error'); }
-    const text = (data.content||[]).map(b=>b.text||'').join('\n');
-    const clean = text.replace(/```json|```/g,'').trim();
+async function copyTestPrompt(){
+  const btn = document.getElementById('testCopyBtn');
+  btn.disabled = true;
+  document.getElementById('testStatus').innerHTML = '<span class="spinner-dot"></span>Reading pages…';
+  document.getElementById('testStatus').className = 'test-status';
+  try{
+    const prompt = await buildTestPrompt();
+    if(!prompt){ return; }
+    await navigator.clipboard.writeText(prompt);
+    document.getElementById('testStatus').textContent = 'Prompt copied — paste it into a Claude chat, then paste the reply below.';
+    document.getElementById('testStatus').className = 'test-status';
+  }catch(e){
+    console.error(e);
+    document.getElementById('testStatus').textContent = 'Could not copy automatically — see console, or select and copy manually.';
+    document.getElementById('testStatus').className = 'test-status err';
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+function loadTestFromPaste(){
+  const raw = document.getElementById('testPasteBack').value.trim();
+  if(!raw){
+    document.getElementById('testStatus').textContent = 'Paste Claude\'s reply into the box first.';
+    document.getElementById('testStatus').className = 'test-status err';
+    return;
+  }
+  try{
+    const clean = raw.replace(/```json|```/g,'').trim();
     const parsed = JSON.parse(clean);
     testQuestions = parsed.questions || [];
     testRevealed = {};
     document.getElementById('testStatus').textContent = '';
     renderTestResults();
   }catch(e){
-    console.error(e);
-    document.getElementById('testStatus').textContent = 'Could not generate the test: ' + e.message;
+    document.getElementById('testStatus').textContent = 'Couldn\'t read that as the expected format — make sure you pasted Claude\'s full reply.';
     document.getElementById('testStatus').className = 'test-status err';
-  }finally{
-    btn.disabled = false;
   }
 }
 
