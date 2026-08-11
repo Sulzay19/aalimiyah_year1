@@ -352,6 +352,7 @@
   .sem-chip.on{background:var(--bg); color:#fff; border-color:var(--bg);}
   .sem-chip.iscurrent{box-shadow:inset 0 0 0 2px var(--gold);}
   .subject-block{margin-bottom:20px;}
+  .subject-picker-row{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:22px;}
   .subject-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
   .subject-name{font-family:'Source Serif 4',serif; font-weight:700; font-size:15px; color:var(--ink);}
   .book-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
@@ -963,8 +964,10 @@ for(let y=1; y<=6; y++){
 function ensureFixedTerms(){
   const existingIds = new Set(courses.map(c=>c.id));
   TERMS.forEach(t=>{
-    if(!existingIds.has(t.id)) courses.push({ id:t.id, name:t.name, bookIds:[] });
+    if(!existingIds.has(t.id)) courses.push({ id:t.id, name:t.name, bookIds:[], subjects: FIXED_SUBJECTS.slice() });
   });
+  // migration: older terms saved before per-term subjects existed default to "all subjects"
+  courses.forEach(c=>{ if(!Array.isArray(c.subjects)) c.subjects = FIXED_SUBJECTS.slice(); });
 }
 let currentTermId = 'y1s1'; // which year-semester is "live" right now — shown on the Today card
 let selectedTermId = null; // which year-semester's page is open within the Courses tab
@@ -1301,6 +1304,15 @@ function termShortLabel(id){
   const t = TERMS.find(x=>x.id===id);
   return t ? t.short : id;
 }
+async function toggleTermSubject(termId, subject){
+  const c = courses.find(x=>x.id===termId);
+  if(!c) return;
+  c.subjects = c.subjects || [];
+  if(c.subjects.includes(subject)) c.subjects = c.subjects.filter(s=>s!==subject);
+  else c.subjects.push(subject);
+  await saveCourses(courses);
+  renderCoursesTab();
+}
 function renderCoursesTab(){
   if(!selectedTermId) selectedTermId = currentTermId;
 
@@ -1319,9 +1331,19 @@ function renderCoursesTab(){
   }).join('');
 
   const term = TERMS.find(t=>t.id===selectedTermId);
-  const course = courses.find(c=>c.id===selectedTermId) || {bookIds:[]};
+  const course = courses.find(c=>c.id===selectedTermId) || {bookIds:[], subjects:[]};
+  const termSubjects = course.subjects || [];
 
-  const subjectsHtml = FIXED_SUBJECTS.map(subj=>{
+  const subjectPickerHtml = `
+    <div class="subject-picker-row">
+      ${FIXED_SUBJECTS.map(subj=>{
+        const count = books.filter(b=> (course.bookIds||[]).includes(b.id) && normalizeSubject(b.subject)===subj).length;
+        return `<div class="weekday-chip ${termSubjects.includes(subj)?'on':''}" onclick="toggleTermSubject('${selectedTermId}','${subj}')">${escapeHtml(subj)}${count?` · ${count}`:''}</div>`;
+      }).join('')}
+    </div>`;
+
+  const activeSubjects = FIXED_SUBJECTS.filter(s=>termSubjects.includes(s));
+  const subjectsHtml = activeSubjects.length ? activeSubjects.map(subj=>{
     const subjBooks = books.filter(b=> (course.bookIds||[]).includes(b.id) && normalizeSubject(b.subject)===subj);
     const rows = subjBooks.length ? subjBooks.map(b=>{
       const {studiedDays, totalDays} = bookProgress(b);
@@ -1343,7 +1365,7 @@ function renderCoursesTab(){
         </div>
         <div class="book-row">${rows}</div>
       </div>`;
-  }).join('');
+  }).join('') : `<div class="empty-progress">No subjects selected for this year–semester yet — check off subjects above to start adding books.</div>`;
 
   document.getElementById('main').innerHTML = `
     <div class="progress-header">
@@ -1351,10 +1373,13 @@ function renderCoursesTab(){
       <div class="sub">Six years, two semesters each. Pick a year–semester to see everything assigned to it.</div>
     </div>
     <div class="year-grid">${yearsHtml}</div>
-    <div class="section-label">${term.name} — books by subject</div>
+    <div class="section-label">${term.name}</div>
     ${selectedTermId!==currentTermId
       ? `<button class="btn primary" style="margin-bottom:16px;" onclick="setCurrentTerm('${selectedTermId}')">★ Set as current</button>`
       : `<div class="hint" style="margin-bottom:16px;">This is the current year–semester — it's the one shown on the Today card.</div>`}
+    <div class="section-label">Subjects taught this year–semester</div>
+    ${subjectPickerHtml}
+    <div class="section-label">Books by subject</div>
     ${subjectsHtml}
   `;
 }
