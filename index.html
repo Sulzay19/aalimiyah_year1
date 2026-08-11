@@ -280,6 +280,20 @@
   }
   .schedule-meta{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:14px; font-size:11.5px; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace;}
   .schedule-meta b{color:var(--ink); font-family:'Inter',sans-serif; font-weight:600;}
+  .btn.small{padding:5px 10px; font-size:11px;}
+  .subject-manage{margin-top:8px;}
+  .subject-manage-list{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;}
+  .subject-chip{
+    display:flex; align-items:center; gap:6px; padding:5px 6px 5px 10px; border-radius:20px;
+    border:1px solid var(--line); font-size:11.5px; font-family:'IBM Plex Mono',monospace; color:var(--ink-dim);
+  }
+  .subject-chip button{
+    border:none; background:rgba(217,72,58,.12); color:#b8382c; width:16px; height:16px; border-radius:50%;
+    font-size:11px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .subject-chip button:hover{background:rgba(217,72,58,.25);}
+  .subject-manage-add{display:flex; gap:6px;}
+  .subject-manage-add input{flex:1; margin:0;}
   .weekday-picker{display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;}
   .weekday-chip{
     padding:6px 10px; border-radius:16px; border:1px solid var(--line); font-size:11.5px; cursor:pointer;
@@ -590,13 +604,14 @@
     <label>Subject</label>
     <select id="bSubject">
       <option value="" disabled selected>Select a subject</option>
-      <option>Quran</option>
-      <option>Tafseer</option>
-      <option>Fiqh</option>
-      <option>Taareekh</option>
-      <option>Usool</option>
-      <option>Arabic</option>
     </select>
+    <div class="subject-manage" id="subjectManage">
+      <div class="subject-manage-list" id="subjectManageList"></div>
+      <div class="subject-manage-add">
+        <input type="text" id="newSubjectInput" placeholder="New subject name" onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubject();}">
+        <button type="button" class="btn ghost small" onclick="addSubject()">+ Add subject</button>
+      </div>
+    </div>
     <label>Total pages</label>
     <input type="number" id="bPages" placeholder="Auto-fills from PDF if uploaded">
     <label>PDF file</label>
@@ -725,6 +740,17 @@ async function loadBooks(){
 }
 async function saveBooks(books){
   try{ localStorage.setItem('books', JSON.stringify(books)); }
+  catch(e){ console.error('save failed', e); }
+  syncToFile();
+}
+async function loadSubjects(){
+  try{
+    const v = localStorage.getItem('subjects');
+    return v ? JSON.parse(v) : DEFAULT_SUBJECTS.slice();
+  }catch(e){ return DEFAULT_SUBJECTS.slice(); }
+}
+async function saveSubjects(list){
+  try{ localStorage.setItem('subjects', JSON.stringify(list)); }
   catch(e){ console.error('save failed', e); }
   syncToFile();
 }
@@ -964,10 +990,10 @@ for(let y=1; y<=6; y++){
 function ensureFixedTerms(){
   const existingIds = new Set(courses.map(c=>c.id));
   TERMS.forEach(t=>{
-    if(!existingIds.has(t.id)) courses.push({ id:t.id, name:t.name, bookIds:[], subjects: FIXED_SUBJECTS.slice() });
+    if(!existingIds.has(t.id)) courses.push({ id:t.id, name:t.name, bookIds:[], subjects: SUBJECTS.slice() });
   });
   // migration: older terms saved before per-term subjects existed default to "all subjects"
-  courses.forEach(c=>{ if(!Array.isArray(c.subjects)) c.subjects = FIXED_SUBJECTS.slice(); });
+  courses.forEach(c=>{ if(!Array.isArray(c.subjects)) c.subjects = SUBJECTS.slice(); });
 }
 let currentTermId = 'y1s1'; // which year-semester is "live" right now — shown on the Today card
 let selectedTermId = null; // which year-semester's page is open within the Courses tab
@@ -1050,18 +1076,61 @@ function renderMiscTab(){
   initSaveFileStatus();
 }
 
-/* ---------------- subjects (fixed top pill nav) ---------------- */
-const FIXED_SUBJECTS = ['Quran','Tafseer','Fiqh','Taareekh','Usool','Arabic'];
+/* ---------------- subjects (top pill nav — user-editable) ---------------- */
+const DEFAULT_SUBJECTS = ['Quran','Tafseer','Fiqh','Taareekh','Usool','Arabic'];
+let SUBJECTS = DEFAULT_SUBJECTS.slice(); // overwritten from storage at init()
 function normalizeSubject(raw){
   const s = (raw||'').trim();
-  return FIXED_SUBJECTS.find(f=>f.toLowerCase()===s.toLowerCase()) || null;
+  return SUBJECTS.find(f=>f.toLowerCase()===s.toLowerCase()) || null;
 }
 function isSubjectTab(tab){
   return !['home','schedule','courses','progress','certificates','misc'].includes(tab);
 }
 function getSubjects(){
   const hasOther = books.some(b=>!normalizeSubject(b.subject));
-  return hasOther ? [...FIXED_SUBJECTS, 'Other'] : FIXED_SUBJECTS.slice();
+  return hasOther ? [...SUBJECTS, 'Other'] : SUBJECTS.slice();
+}
+async function addSubject(){
+  const input = document.getElementById('newSubjectInput');
+  const name = (input.value||'').trim();
+  if(!name){ input.focus(); return; }
+  if(name.toLowerCase()==='other'){ alert('"Other" is reserved — pick a different name.'); return; }
+  if(SUBJECTS.some(s=>s.toLowerCase()===name.toLowerCase())){ alert('That subject already exists.'); return; }
+  SUBJECTS.push(name);
+  await saveSubjects(SUBJECTS);
+  input.value='';
+  renderSubjectSelect(name);
+  renderSubjectManageList();
+  renderPillNav();
+}
+async function deleteSubject(name){
+  const inUse = getBooksForSubject(name).length;
+  const msg = inUse
+    ? `Delete "${name}"? ${inUse} book${inUse===1?'':'s'} using it will move under "Other".`
+    : `Delete "${name}"?`;
+  if(!confirm(msg)) return;
+  SUBJECTS = SUBJECTS.filter(s=>s!==name);
+  await saveSubjects(SUBJECTS);
+  courses.forEach(c=>{ if(Array.isArray(c.subjects)) c.subjects = c.subjects.filter(s=>s!==name); });
+  await saveCourses(courses);
+  renderSubjectSelect();
+  renderSubjectManageList();
+  renderPillNav();
+  if(activeTab===name){ selectTab('home'); }
+}
+function renderSubjectSelect(selectValue){
+  const sel = document.getElementById('bSubject');
+  if(!sel) return;
+  const current = selectValue!==undefined ? selectValue : sel.value;
+  sel.innerHTML = `<option value="" disabled ${current?'':'selected'}>Select a subject</option>` +
+    SUBJECTS.map(s=>`<option ${s===current?'selected':''}>${escapeHtml(s)}</option>`).join('');
+}
+function renderSubjectManageList(){
+  const wrap = document.getElementById('subjectManageList');
+  if(!wrap) return;
+  wrap.innerHTML = SUBJECTS.map(s=>`
+    <div class="subject-chip">${escapeHtml(s)}<button type="button" title="Delete subject" onclick="deleteSubject('${escapeHtml(s).replace(/'/g,"\\'")}')">&times;</button></div>
+  `).join('');
 }
 function getBooksForSubject(subject){
   if(subject === 'Other') return books.filter(b=>!normalizeSubject(b.subject));
@@ -1147,6 +1216,7 @@ async function selectBookWithinSubject(id){
 
 /* ---------------- init ---------------- */
 (async function init(){
+  SUBJECTS = await loadSubjects();
   books = await loadBooks();
   courses = await loadCourses();
   ensureFixedTerms();
@@ -1336,13 +1406,13 @@ function renderCoursesTab(){
 
   const subjectPickerHtml = `
     <div class="subject-picker-row">
-      ${FIXED_SUBJECTS.map(subj=>{
+      ${SUBJECTS.map(subj=>{
         const count = books.filter(b=> (course.bookIds||[]).includes(b.id) && normalizeSubject(b.subject)===subj).length;
         return `<div class="weekday-chip ${termSubjects.includes(subj)?'on':''}" onclick="toggleTermSubject('${selectedTermId}','${subj}')">${escapeHtml(subj)}${count?` · ${count}`:''}</div>`;
       }).join('')}
     </div>`;
 
-  const activeSubjects = FIXED_SUBJECTS.filter(s=>termSubjects.includes(s));
+  const activeSubjects = SUBJECTS.filter(s=>termSubjects.includes(s));
   const subjectsHtml = activeSubjects.length ? activeSubjects.map(subj=>{
     const subjBooks = books.filter(b=> (course.bookIds||[]).includes(b.id) && normalizeSubject(b.subject)===subj);
     const rows = subjBooks.length ? subjBooks.map(b=>{
@@ -1819,7 +1889,8 @@ function bookProgress(b){
 /* ---------------- book modal ---------------- */
 function openBookModal(presetSubject, presetTermId){
   document.getElementById('bTitle').value='';
-  document.getElementById('bSubject').value = FIXED_SUBJECTS.includes(presetSubject) ? presetSubject : '';
+  renderSubjectSelect(SUBJECTS.includes(presetSubject) ? presetSubject : '');
+  renderSubjectManageList();
   document.getElementById('bPages').value='';
   document.getElementById('dropZone').textContent = 'Click to choose a PDF (optional — you can add it later)';
   document.getElementById('dropZone').classList.remove('hasfile');
