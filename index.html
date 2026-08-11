@@ -617,7 +617,8 @@
     <label>PDF file</label>
     <div class="upload-drop" id="dropZone" onclick="document.getElementById('bFile').click()">Click to choose a PDF (optional — you can add it later)</div>
     <input type="file" id="bFile" accept="application/pdf" style="display:none">
-    <label>Course year(s)</label>
+    <label>Year–semester</label>
+    <div style="font-size:11.5px; color:var(--ink-dim); line-height:1.4; margin-bottom:2px;">Pick one. This entry's page range and schedule belong only to this year–semester — add the book again separately for another year if you need to continue it there.</div>
     <div class="weekday-picker" id="bookCoursePicker"></div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeModal('bookModal')">Cancel</button>
@@ -626,11 +627,11 @@
   </div>
 </div>
 
-<!-- Assign Book to Years/Semesters Modal -->
+<!-- Move Book to a Different Year/Semester Modal -->
 <div class="overlay" id="courseModal">
   <div class="modal" style="width:420px;">
-    <h3>Assign to year–semester</h3>
-    <div style="font-size:12px; color:var(--ink-dim); line-height:1.5; margin-bottom:10px;">Check every year–semester this book belongs to. Long books can span more than one.</div>
+    <h3>Move to a different year–semester</h3>
+    <div style="font-size:12px; color:var(--ink-dim); line-height:1.5; margin-bottom:10px;">A book belongs to exactly one year–semester, with its own page range and schedule. Pick a new one to move it there — its progress moves with it.</div>
     <div id="courseListWrap"></div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeModal('courseModal')">Done</button>
@@ -1418,13 +1419,11 @@ function renderCoursesTab(){
     const rows = subjBooks.length ? subjBooks.map(b=>{
       const {studiedDays, totalDays} = bookProgress(b);
       const pct = totalDays ? Math.round(studiedDays/totalDays*100) : 0;
-      const otherTerms = courses.filter(c=>c.id!==selectedTermId && (c.bookIds||[]).includes(b.id)).map(c=>termShortLabel(c.id));
       return `
         <div class="book-chip" style="cursor:pointer;" onclick="selectBook('${b.id}')">
           <span class="t">${escapeHtml(b.title)}${b.completed?' 🏅':''}</span>
           <span class="p">${pct}%</span>
         </div>
-        ${otherTerms.length ? `<div class="book-continues">↳ also in ${otherTerms.join(', ')}</div>` : ''}
       `;
     }).join('') : `<div class="empty-progress" style="padding:4px 0;">No book added yet for this year–semester.</div>`;
     return `
@@ -1510,16 +1509,15 @@ async function markBookComplete(bookId){
   openCertificate(bookId);
 }
 
-/* ---------------- course years ---------------- */
+/* ---------------- course year (single, exclusive per book) ---------------- */
 function renderBookCoursePicker(){
   const wrap = document.getElementById('bookCoursePicker');
   wrap.innerHTML = `<div class="term-grid-mini">${TERMS.map(t=>`
-    <div class="weekday-chip ${selectedBookCourses.includes(t.id)?'on':''}" onclick="toggleBookCourse('${t.id}')">${t.short}</div>
+    <div class="weekday-chip ${selectedBookCourses.includes(t.id)?'on':''}" onclick="selectBookCourse('${t.id}')">${t.short}</div>
   `).join('')}</div>`;
 }
-function toggleBookCourse(id){
-  if(selectedBookCourses.includes(id)) selectedBookCourses = selectedBookCourses.filter(x=>x!==id);
-  else selectedBookCourses.push(id);
+function selectBookCourse(id){
+  selectedBookCourses = [id]; // a book belongs to exactly one year–semester
   renderBookCoursePicker();
 }
 /* ---------------- test generator ---------------- */
@@ -1922,6 +1920,7 @@ async function saveBook(){
   if(!title){ alert('Give the book a title.'); return; }
   const subject = document.getElementById('bSubject').value.trim();
   if(!subject){ alert('Choose a subject.'); return; }
+  if(!selectedBookCourses.length){ alert('Pick a year–semester for this book.'); return; }
   const pages = parseInt(document.getElementById('bPages').value) || null;
   const id = uid();
   const book = { id, title, subject, totalPages: pages, hasFile:false, completed:false, completedAt:null,
@@ -1964,9 +1963,9 @@ async function deleteBook(id){
   else { activeBookId = null; selectTab('home'); }
 }
 
-/* ---------------- editing a book's course years ---------------- */
+/* ---------------- moving a book to a different (single) year-semester ---------------- */
 function openBookYearsModal(bookId){
-  selectedBookCourses = courses.filter(c=>(c.bookIds||[]).includes(bookId)).map(c=>c.id);
+  const current = courses.find(c=>(c.bookIds||[]).includes(bookId));
   document.getElementById('courseModal').classList.add('show');
   document.getElementById('courseModal').dataset.forBook = bookId;
   const wrap = document.getElementById('courseListWrap');
@@ -1976,17 +1975,18 @@ function openBookYearsModal(bookId){
       <div class="weekday-picker">
         ${[1,2].map(s=>{
           const t = TERMS.find(x=>x.year===y && x.semester===s);
-          return `<div class="weekday-chip ${selectedBookCourses.includes(t.id)?'on':''}" onclick="toggleBookYearAssignment('${bookId}','${t.id}')">Sem ${s}</div>`;
+          const isCurrent = current && current.id===t.id;
+          return `<div class="weekday-chip ${isCurrent?'on':''}" onclick="moveBookToTerm('${bookId}','${t.id}')">Sem ${s}</div>`;
         }).join('')}
       </div>
     </div>
   `).join('');
 }
-async function toggleBookYearAssignment(bookId, courseId){
+async function moveBookToTerm(bookId, courseId){
+  courses.forEach(c=>{ c.bookIds = (c.bookIds||[]).filter(id=>id!==bookId); }); // a book lives in exactly one term
   const c = courses.find(x=>x.id===courseId);
   c.bookIds = c.bookIds || [];
-  if(c.bookIds.includes(bookId)) c.bookIds = c.bookIds.filter(id=>id!==bookId);
-  else c.bookIds.push(bookId);
+  c.bookIds.push(bookId);
   await saveCourses(courses);
   refreshNav();
   if(isSubjectTab(activeTab)) renderSubjectTab(activeTab);
@@ -2555,6 +2555,9 @@ document.getElementById('importFile').addEventListener('change', async (e)=>{
       });
       // shared schedule: keep the current one when merging, since it governs books already in the library
     }
+    // a book belongs to exactly one year–semester — if a merge ever left one in more than one, keep only the first
+    { const seen = new Set();
+      courses.forEach(c=>{ c.bookIds = (c.bookIds||[]).filter(bid=>{ if(seen.has(bid)) return false; seen.add(bid); return true; }); }); }
     ensureFixedTerms();
     await saveBooks(books);
     await saveCourses(courses);
