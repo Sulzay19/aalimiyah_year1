@@ -59,6 +59,7 @@
     font-family:'Source Serif 4',serif; font-weight:600; font-size:14px; color:var(--ink);
     background:var(--card-soft); border:none; border-radius:10px; padding:9px 14px; min-width:150px;
   }
+  .meta-field .value.term{ font-weight:800; color:var(--gold-deep); background:rgba(242,183,5,.14); }
   .meta-field select{cursor:pointer;}
   .pillnav{display:flex; flex-direction:column; gap:4px;}
   .pillnav.secondary{border-top:1px solid var(--line); padding-top:12px; margin-top:10px;}
@@ -337,6 +338,25 @@
   .course-row .cactions{display:flex; gap:6px;}
   .course-row .cactions button{background:transparent; border:none; color:var(--ink-dim); cursor:pointer; font-size:12px;}
   .course-row .cactions button:hover{color:var(--ember);}
+  .term-grid-mini{display:flex; flex-wrap:wrap; gap:6px;}
+
+  /* ---------- courses tab (6 years x 2 semesters) ---------- */
+  .year-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:26px;}
+  .year-card{border:1.5px solid var(--line); border-radius:var(--radius); padding:14px 16px;}
+  .year-card.current{border-color:var(--gold); background:rgba(242,183,5,.07);}
+  .year-title{font-family:'Source Serif 4',serif; font-weight:700; font-size:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; color:var(--ink);}
+  .current-badge{font-size:9.5px; background:var(--gold); color:var(--ink); padding:2px 8px; border-radius:10px; font-weight:700; letter-spacing:.5px;}
+  .sem-row{display:flex; gap:8px;}
+  .sem-chip{flex:1; text-align:center; padding:8px; border-radius:10px; border:1px solid var(--line); font-size:12px; color:var(--ink-dim); cursor:pointer;}
+  .sem-chip:hover{border-color:var(--gold);}
+  .sem-chip.on{background:var(--bg); color:#fff; border-color:var(--bg);}
+  .sem-chip.iscurrent{box-shadow:inset 0 0 0 2px var(--gold);}
+  .subject-block{margin-bottom:20px;}
+  .subject-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .subject-name{font-family:'Source Serif 4',serif; font-weight:700; font-size:15px; color:var(--ink);}
+  .book-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .book-continues{font-size:10.5px; color:var(--ink-dim);}
+  @media (max-width:760px){ .year-grid{grid-template-columns:repeat(2,1fr);} }
 
   /* ---------- certificate ---------- */
   .certificate-wrap{width:640px; max-width:94vw;}
@@ -541,6 +561,10 @@
         <label>Today</label>
         <div class="value" id="headerDate"></div>
       </div>
+      <div class="meta-field">
+        <label>Year · Semester</label>
+        <div class="value term" id="headerTerm"></div>
+      </div>
     </div>
 
     <input type="file" id="importFile" accept="application/json" style="display:none">
@@ -586,16 +610,12 @@
   </div>
 </div>
 
-<!-- Manage Course Years Modal -->
+<!-- Assign Book to Years/Semesters Modal -->
 <div class="overlay" id="courseModal">
-  <div class="modal">
-    <h3>Course years</h3>
-    <div id="courseListWrap" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; margin-bottom:14px;"></div>
-    <label>New year name</label>
-    <div class="row2">
-      <input type="text" id="cName" placeholder="e.g. Year 3">
-      <button class="btn primary" style="flex:0 0 auto;" onclick="addCourseYear()">+ Add</button>
-    </div>
+  <div class="modal" style="width:420px;">
+    <h3>Assign to year–semester</h3>
+    <div style="font-size:12px; color:var(--ink-dim); line-height:1.5; margin-bottom:10px;">Check every year–semester this book belongs to. Long books can span more than one.</div>
+    <div id="courseListWrap"></div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeModal('courseModal')">Done</button>
     </div>
@@ -805,7 +825,7 @@ async function getSavedFileHandle(){
 }
 
 async function backupPayload(){
-  return { exportedAt: new Date().toISOString(), books, courses, schedule };
+  return { exportedAt: new Date().toISOString(), books, courses, schedule, currentTermId };
 }
 
 async function writeToHandle(handle){
@@ -933,6 +953,30 @@ let selectedAssignedDays = []; // this book's own subset of selectedWeekdays, se
 let repaceNotices = {}; // bookId -> message, shown once per load
 let dayListExpanded = {}; // bookId -> {before:bool, after:bool} — collapses the long day list by default
 
+/* ---------------- fixed 6-year / 2-semester course terms ---------------- */
+const TERMS = [];
+for(let y=1; y<=6; y++){
+  for(let s=1; s<=2; s++){
+    TERMS.push({ id:`y${y}s${s}`, year:y, semester:s, name:`Year ${y} · Semester ${s}`, short:`Y${y} · Sem ${s}` });
+  }
+}
+function ensureFixedTerms(){
+  const existingIds = new Set(courses.map(c=>c.id));
+  TERMS.forEach(t=>{
+    if(!existingIds.has(t.id)) courses.push({ id:t.id, name:t.name, bookIds:[] });
+  });
+}
+let currentTermId = 'y1s1'; // which year-semester is "live" right now — shown on the Today card
+let selectedTermId = null; // which year-semester's page is open within the Courses tab
+async function loadCurrentTerm(){
+  try{ const v = localStorage.getItem('currentTermId'); return v || null; }catch(e){ return null; }
+}
+async function saveCurrentTerm(id){
+  try{ localStorage.setItem('currentTermId', id); }catch(e){ console.error('save failed', e); }
+  syncToFile();
+}
+let bookModalReturnToCourses = false; // true when "Add a book" was opened from the Courses tab
+
 // One-time migration: give the known subject pairs their day assignment (2 subjects/day)
 // so existing books land on Mon+Thu / Tue+Fri / Sat instead of every school day at once.
 function migrateAssignedDays(){
@@ -956,6 +1000,9 @@ let schedule = { startDate: null, targetFinishDate: null, schoolDays: DEFAULT_SC
 /* ---------------- header (date) ---------------- */
 function renderHeader(){
   document.getElementById('headerDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric', year:'numeric'});
+  const t = TERMS.find(x=>x.id===currentTermId);
+  const el = document.getElementById('headerTerm');
+  if(el) el.textContent = t ? t.name : '—';
 }
 
 /* ---------------- home tab ---------------- */
@@ -987,16 +1034,15 @@ function renderMiscTab(){
   document.getElementById('main').innerHTML = `
     <div class="progress-header">
       <h2>Manage</h2>
-      <div class="sub">Books, course years, and backups.</div>
+      <div class="sub">Books and backups.</div>
     </div>
     <div class="misc-actions">
       <button class="btn primary" onclick="openBookModal()">➕ Add a book</button>
-      <button class="btn" onclick="openCourseModal()">🗂 Manage course years</button>
       <button class="btn" id="saveFileBtn" onclick="handleSaveFileClick()">💾 Save to file</button>
       <button class="btn" onclick="exportBackup()">⬇ Download a copy (.json)</button>
       <button class="btn" onclick="document.getElementById('importFile').click()">⬆ Import backup</button>
     </div>
-    <div class="hint" id="saveFileHint" style="margin-top:14px;">Books &amp; PDFs live in this browser only. Click 💾 once to link a single .json file — every change after that is written straight into it.</div>
+    <div class="hint" id="saveFileHint" style="margin-top:14px;">Books &amp; PDFs live in this browser only. Click 💾 once to link a single .json file — every change after that is written straight into it. Add books to years and semesters from the Courses tab.</div>
   `;
   initSaveFileStatus();
 }
@@ -1008,7 +1054,7 @@ function normalizeSubject(raw){
   return FIXED_SUBJECTS.find(f=>f.toLowerCase()===s.toLowerCase()) || null;
 }
 function isSubjectTab(tab){
-  return !['home','schedule','progress','certificates','misc'].includes(tab);
+  return !['home','schedule','courses','progress','certificates','misc'].includes(tab);
 }
 function getSubjects(){
   const hasOther = books.some(b=>!normalizeSubject(b.subject));
@@ -1028,7 +1074,7 @@ function renderPillNav(){
   document.getElementById('pillNavSubjects').innerHTML =
     `<div class="pill ${activeTab==='home'?'active':''}" data-tab="home">Home</div>` +
     subjects.map(s=>`<div class="pill ${activeTab===s?'active':''}" data-tab="${escapeHtml(s)}">${escapeHtml(s)}</div>`).join('');
-  const utilTabs = [['schedule','🗓 Schedule'],['progress','📊 Progress'],['certificates','🎓 Certificates'],['misc','⚙ Misc']];
+  const utilTabs = [['schedule','🗓 Schedule'],['courses','📚 Courses'],['progress','📊 Progress'],['certificates','🎓 Certificates'],['misc','⚙ Misc']];
   document.getElementById('pillNavUtility').innerHTML = utilTabs.map(([id,label])=>
     `<div class="pill secondary ${activeTab===id?'active':''}" data-tab="${id}">${label}</div>`).join('');
 }
@@ -1049,6 +1095,7 @@ async function selectTab(tab){
   renderPillNav();
   if(tab==='home') renderHomeTab();
   else if(tab==='schedule') renderSchedule();
+  else if(tab==='courses') renderCoursesTab();
   else if(tab==='progress') renderProgress();
   else if(tab==='certificates') renderCertificates();
   else if(tab==='misc') renderMiscTab();
@@ -1099,6 +1146,11 @@ async function selectBookWithinSubject(id){
 (async function init(){
   books = await loadBooks();
   courses = await loadCourses();
+  ensureFixedTerms();
+  await saveCourses(courses);
+  const savedTerm = await loadCurrentTerm();
+  if(savedTerm && TERMS.some(t=>t.id===savedTerm)) currentTermId = savedTerm;
+  selectedTermId = currentTermId;
   const savedSchedule = await loadSchedule();
   if(savedSchedule) schedule = savedSchedule;
   migrateAssignedDays();
@@ -1234,6 +1286,79 @@ function renderSchedule(){
   `;
 }
 
+/* ---------------- courses (6 years x 2 semesters) ---------------- */
+function openTerm(id){
+  selectedTermId = id;
+  renderCoursesTab();
+}
+async function setCurrentTerm(id){
+  currentTermId = id;
+  await saveCurrentTerm(currentTermId);
+  renderHeader();
+  renderCoursesTab();
+}
+function termShortLabel(id){
+  const t = TERMS.find(x=>x.id===id);
+  return t ? t.short : id;
+}
+function renderCoursesTab(){
+  if(!selectedTermId) selectedTermId = currentTermId;
+
+  const yearsHtml = [1,2,3,4,5,6].map(y=>{
+    const yearHasCurrent = currentTermId===`y${y}s1` || currentTermId===`y${y}s2`;
+    const semsHtml = [1,2].map(s=>{
+      const id = `y${y}s${s}`;
+      const isOpen = id===selectedTermId;
+      const isCurrent = id===currentTermId;
+      return `<div class="sem-chip ${isOpen?'on':''} ${isCurrent?'iscurrent':''}" onclick="openTerm('${id}')">Sem ${s}</div>`;
+    }).join('');
+    return `<div class="year-card ${yearHasCurrent?'current':''}">
+      <div class="year-title">Year ${y} ${yearHasCurrent?'<span class="current-badge">CURRENT</span>':''}</div>
+      <div class="sem-row">${semsHtml}</div>
+    </div>`;
+  }).join('');
+
+  const term = TERMS.find(t=>t.id===selectedTermId);
+  const course = courses.find(c=>c.id===selectedTermId) || {bookIds:[]};
+
+  const subjectsHtml = FIXED_SUBJECTS.map(subj=>{
+    const subjBooks = books.filter(b=> (course.bookIds||[]).includes(b.id) && normalizeSubject(b.subject)===subj);
+    const rows = subjBooks.length ? subjBooks.map(b=>{
+      const {studiedDays, totalDays} = bookProgress(b);
+      const pct = totalDays ? Math.round(studiedDays/totalDays*100) : 0;
+      const otherTerms = courses.filter(c=>c.id!==selectedTermId && (c.bookIds||[]).includes(b.id)).map(c=>termShortLabel(c.id));
+      return `
+        <div class="book-chip" style="cursor:pointer;" onclick="selectBook('${b.id}')">
+          <span class="t">${escapeHtml(b.title)}${b.completed?' 🏅':''}</span>
+          <span class="p">${pct}%</span>
+        </div>
+        ${otherTerms.length ? `<div class="book-continues">↳ also in ${otherTerms.join(', ')}</div>` : ''}
+      `;
+    }).join('') : `<div class="empty-progress" style="padding:4px 0;">No book added yet for this year–semester.</div>`;
+    return `
+      <div class="subject-block">
+        <div class="subject-head">
+          <div class="subject-name">${escapeHtml(subj)}</div>
+          <button class="btn ghost" style="padding:5px 10px; font-size:11px;" onclick="openBookModal('${escapeHtml(subj)}','${selectedTermId}')">+ Add book</button>
+        </div>
+        <div class="book-row">${rows}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="progress-header">
+      <h2>Courses</h2>
+      <div class="sub">Six years, two semesters each. Pick a year–semester to see everything assigned to it.</div>
+    </div>
+    <div class="year-grid">${yearsHtml}</div>
+    <div class="section-label">${term.name} — books by subject</div>
+    ${selectedTermId!==currentTermId
+      ? `<button class="btn primary" style="margin-bottom:16px;" onclick="setCurrentTerm('${selectedTermId}')">★ Set as current</button>`
+      : `<div class="hint" style="margin-bottom:16px;">This is the current year–semester — it's the one shown on the Today card.</div>`}
+    ${subjectsHtml}
+  `;
+}
+
 /* ---------------- certificates ---------------- */
 function renderCertificates(){
   const completed = books.filter(b=>b.completed);
@@ -1293,39 +1418,14 @@ async function markBookComplete(bookId){
 /* ---------------- course years ---------------- */
 function renderBookCoursePicker(){
   const wrap = document.getElementById('bookCoursePicker');
-  if(!courses.length){ wrap.innerHTML = `<span style="font-size:11.5px; color:var(--paper-dim);">No years yet — add one from "Manage course years" on the Misc tab.</span>`; return; }
-  wrap.innerHTML = courses.map(c=>`
-    <div class="weekday-chip ${selectedBookCourses.includes(c.id)?'on':''}" onclick="toggleBookCourse('${c.id}')">${escapeHtml(c.name)}</div>
-  `).join('');
+  wrap.innerHTML = `<div class="term-grid-mini">${TERMS.map(t=>`
+    <div class="weekday-chip ${selectedBookCourses.includes(t.id)?'on':''}" onclick="toggleBookCourse('${t.id}')">${t.short}</div>
+  `).join('')}</div>`;
 }
 function toggleBookCourse(id){
   if(selectedBookCourses.includes(id)) selectedBookCourses = selectedBookCourses.filter(x=>x!==id);
   else selectedBookCourses.push(id);
   renderBookCoursePicker();
-}
-function openCourseModal(){
-  renderCourseList();
-  document.getElementById('cName').value = '';
-  document.getElementById('courseModal').classList.add('show');
-}
-function renderCourseList(){
-  const wrap = document.getElementById('courseListWrap');
-  wrap.innerHTML = courses.length ? courses.map(c=>`
-    <div class="course-row">
-      <div class="cname">${escapeHtml(c.name)} <span style="color:var(--paper-dim); font-size:11px;">(${(c.bookIds||[]).length} book${(c.bookIds||[]).length===1?'':'s'})</span></div>
-      <div class="cactions"><button onclick="deleteCourseYear('${c.id}')">Delete</button></div>
-    </div>
-  `).join('') : `<div style="color:var(--paper-dim); font-size:12.5px;">No course years yet.</div>`;
-}
-async function addCourseYear(){
-  const name = document.getElementById('cName').value.trim();
-  if(!name){ return; }
-  courses.push({ id: uid(), name, bookIds: [] });
-  await saveCourses(courses);
-  document.getElementById('cName').value = '';
-  renderCourseList();
-  refreshNav();
-  if(document.getElementById('bookModal').classList.contains('show')) renderBookCoursePicker();
 }
 /* ---------------- test generator ---------------- */
 let testBookId = null;
@@ -1685,16 +1785,6 @@ function retakeExam(){
   renderExam();
 }
 
-async function deleteCourseYear(id){
-  if(!confirm('Delete this course year? Books inside it are kept, just ungrouped.')) return;
-  courses = courses.filter(c=>c.id!==id);
-  await saveCourses(courses);
-  renderCourseList();
-  refreshNav();
-  if(isSubjectTab(activeTab)) renderSubjectTab(activeTab);
-}
-
-
 function bookProgress(b){
   let studiedDays=0, totalDays=0;
   (b.days||[]).forEach(d=>{ totalDays++; if(d.studied) studiedDays++; });
@@ -1702,14 +1792,15 @@ function bookProgress(b){
 }
 
 /* ---------------- book modal ---------------- */
-function openBookModal(presetSubject){
+function openBookModal(presetSubject, presetTermId){
   document.getElementById('bTitle').value='';
   document.getElementById('bSubject').value = FIXED_SUBJECTS.includes(presetSubject) ? presetSubject : '';
   document.getElementById('bPages').value='';
   document.getElementById('dropZone').textContent = 'Click to choose a PDF (optional — you can add it later)';
   document.getElementById('dropZone').classList.remove('hasfile');
   pendingFile = null;
-  selectedBookCourses = [];
+  selectedBookCourses = presetTermId ? [presetTermId] : [];
+  bookModalReturnToCourses = !!presetTermId;
   renderBookCoursePicker();
   document.getElementById('bookModal').classList.add('show');
 }
@@ -1757,7 +1848,8 @@ async function saveBook(){
   await saveBooks(books);
   closeModal('bookModal');
   refreshNav();
-  selectBook(id);
+  if(bookModalReturnToCourses){ bookModalReturnToCourses = false; activeTab='courses'; renderPillNav(); renderCoursesTab(); }
+  else{ selectBook(id); }
 }
 
 async function deleteBook(id){
@@ -1779,18 +1871,20 @@ async function deleteBook(id){
 /* ---------------- editing a book's course years ---------------- */
 function openBookYearsModal(bookId){
   selectedBookCourses = courses.filter(c=>(c.bookIds||[]).includes(bookId)).map(c=>c.id);
-  renderCourseList();
-  document.getElementById('cName').value='';
   document.getElementById('courseModal').classList.add('show');
   document.getElementById('courseModal').dataset.forBook = bookId;
-  // append quick toggles for this book right under the list
   const wrap = document.getElementById('courseListWrap');
-  if(courses.length){
-    const toggleRow = document.createElement('div');
-    toggleRow.innerHTML = `<div style="font-size:11px; color:var(--paper-dim); margin:10px 0 6px; text-transform:uppercase; letter-spacing:1px;">Assign this book to:</div>
-      <div class="weekday-picker">${courses.map(c=>`<div class="weekday-chip ${selectedBookCourses.includes(c.id)?'on':''}" onclick="toggleBookYearAssignment('${bookId}','${c.id}')">${escapeHtml(c.name)}</div>`).join('')}</div>`;
-    wrap.appendChild(toggleRow);
-  }
+  wrap.innerHTML = [1,2,3,4,5,6].map(y=>`
+    <div class="course-group">
+      <div class="course-group-label">Year ${y}</div>
+      <div class="weekday-picker">
+        ${[1,2].map(s=>{
+          const t = TERMS.find(x=>x.year===y && x.semester===s);
+          return `<div class="weekday-chip ${selectedBookCourses.includes(t.id)?'on':''}" onclick="toggleBookYearAssignment('${bookId}','${t.id}')">Sem ${s}</div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
 }
 async function toggleBookYearAssignment(bookId, courseId){
   const c = courses.find(x=>x.id===courseId);
@@ -1800,6 +1894,7 @@ async function toggleBookYearAssignment(bookId, courseId){
   await saveCourses(courses);
   refreshNav();
   if(isSubjectTab(activeTab)) renderSubjectTab(activeTab);
+  if(activeTab==='courses') renderCoursesTab();
   openBookYearsModal(bookId); // refresh chip states
 }
 
@@ -2325,7 +2420,7 @@ function jumpToPage(p){
 
 /* ---------------- backup export / import ---------------- */
 function exportBackup(){
-  const payload = { exportedAt: new Date().toISOString(), books, courses, schedule };
+  const payload = { exportedAt: new Date().toISOString(), books, courses, schedule, currentTermId };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2343,23 +2438,34 @@ document.getElementById('importFile').addEventListener('change', async (e)=>{
     const incoming = Array.isArray(data) ? data : data.books;
     const incomingCourses = Array.isArray(data.courses) ? data.courses : [];
     const incomingSchedule = (data.schedule && typeof data.schedule==='object') ? data.schedule : null;
+    const incomingTermId = (typeof data.currentTermId === 'string') ? data.currentTermId : null;
     if(!Array.isArray(incoming)) throw new Error('bad format');
     const replace = confirm(`Import ${incoming.length} book(s)? Click OK to replace your current library, or Cancel to merge alongside it.`);
     if(replace){
       books = incoming;
       courses = incomingCourses;
       if(incomingSchedule) schedule = incomingSchedule;
+      if(incomingTermId) currentTermId = incomingTermId;
     } else {
       const existingIds = new Set(books.map(b=>b.id));
       incoming.forEach(b=>{ if(!existingIds.has(b.id)) books.push(b); });
       const existingCourseIds = new Set(courses.map(c=>c.id));
-      incomingCourses.forEach(c=>{ if(!existingCourseIds.has(c.id)) courses.push(c); });
+      incomingCourses.forEach(c=>{
+        if(!existingCourseIds.has(c.id)) courses.push(c);
+        else { // fixed term ids already exist locally — merge in any book assignments we don't have yet
+          const local = courses.find(x=>x.id===c.id);
+          (c.bookIds||[]).forEach(bid=>{ if(!(local.bookIds||[]).includes(bid)) (local.bookIds = local.bookIds||[]).push(bid); });
+        }
+      });
       // shared schedule: keep the current one when merging, since it governs books already in the library
     }
+    ensureFixedTerms();
     await saveBooks(books);
     await saveCourses(courses);
     await saveSchedule(schedule);
+    await saveCurrentTerm(currentTermId);
     activeBookId = books.length ? books[0].id : null;
+    selectedTermId = currentTermId;
     refreshNav();
     if(activeBookId) selectBook(activeBookId); else selectTab('home');
     alert('Import complete. Note: PDF files themselves are not included in a backup — re-attach each book\'s PDF if needed.');
