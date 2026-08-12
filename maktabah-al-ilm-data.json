@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-12T11:22:04.514Z",
+  "exportedAt": "2026-08-12T14:20:10.180Z",
   "books": [
     {
       "id": "mspytekm1323d",
@@ -9,62 +9,513 @@
       "hasFile": true,
       "completed": false,
       "completedAt": null,
-      "pageRangeStart": null,
-      "pageRangeEnd": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 372,
       "actualFinishDate": null,
-      "days": [],
+      "days": [
+        {
+          "id": "msq1xb2l7cdm7",
+          "date": "2026-08-16",
+          "pageStart": 1,
+          "pageEnd": 6,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lqoyri",
+          "date": "2026-08-18",
+          "pageStart": 7,
+          "pageEnd": 12,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2ltelxn",
+          "date": "2026-08-19",
+          "pageStart": 13,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l8yld6",
+          "date": "2026-08-21",
+          "pageStart": 19,
+          "pageEnd": 24,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l8p41f",
+          "date": "2026-08-23",
+          "pageStart": 25,
+          "pageEnd": 30,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2le8wy2",
+          "date": "2026-08-25",
+          "pageStart": 31,
+          "pageEnd": 36,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lk9w07",
+          "date": "2026-08-26",
+          "pageStart": 37,
+          "pageEnd": 42,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lcwal3",
+          "date": "2026-08-28",
+          "pageStart": 43,
+          "pageEnd": 48,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2ld90vb",
+          "date": "2026-08-30",
+          "pageStart": 49,
+          "pageEnd": 54,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l0bkwj",
+          "date": "2026-09-01",
+          "pageStart": 55,
+          "pageEnd": 60,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lxigr9",
+          "date": "2026-09-02",
+          "pageStart": 61,
+          "pageEnd": 66,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l2rgq0",
+          "date": "2026-09-04",
+          "pageStart": 67,
+          "pageEnd": 72,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lazgm1",
+          "date": "2026-09-06",
+          "pageStart": 73,
+          "pageEnd": 78,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2ls3wdf",
+          "date": "2026-09-08",
+          "pageStart": 79,
+          "pageEnd": 84,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l3sdqi",
+          "date": "2026-09-09",
+          "pageStart": 85,
+          "pageEnd": 90,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l57g1k",
+          "date": "2026-09-11",
+          "pageStart": 91,
+          "pageEnd": 96,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lsr7lq",
+          "date": "2026-09-13",
+          "pageStart": 97,
+          "pageEnd": 102,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l8akly",
+          "date": "2026-09-15",
+          "pageStart": 103,
+          "pageEnd": 107,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lg1dlq",
+          "date": "2026-09-16",
+          "pageStart": 108,
+          "pageEnd": 112,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lap5sc",
+          "date": "2026-09-18",
+          "pageStart": 113,
+          "pageEnd": 117,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lt6s9y",
+          "date": "2026-09-20",
+          "pageStart": 118,
+          "pageEnd": 122,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l17yld",
+          "date": "2026-09-22",
+          "pageStart": 123,
+          "pageEnd": 127,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lh5mij",
+          "date": "2026-09-23",
+          "pageStart": 128,
+          "pageEnd": 132,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lybdsa",
+          "date": "2026-09-25",
+          "pageStart": 133,
+          "pageEnd": 137,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lssggz",
+          "date": "2026-09-27",
+          "pageStart": 138,
+          "pageEnd": 142,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l6kl02",
+          "date": "2026-09-29",
+          "pageStart": 143,
+          "pageEnd": 147,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l9j44w",
+          "date": "2026-09-30",
+          "pageStart": 148,
+          "pageEnd": 152,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l2hhh7",
+          "date": "2026-10-02",
+          "pageStart": 153,
+          "pageEnd": 157,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lhgwsu",
+          "date": "2026-10-04",
+          "pageStart": 158,
+          "pageEnd": 162,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lckg6d",
+          "date": "2026-10-06",
+          "pageStart": 163,
+          "pageEnd": 167,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lt2dfq",
+          "date": "2026-10-07",
+          "pageStart": 168,
+          "pageEnd": 172,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l2piuo",
+          "date": "2026-10-09",
+          "pageStart": 173,
+          "pageEnd": 177,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lvnc0p",
+          "date": "2026-10-11",
+          "pageStart": 178,
+          "pageEnd": 182,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l87job",
+          "date": "2026-10-13",
+          "pageStart": 183,
+          "pageEnd": 187,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lskfql",
+          "date": "2026-10-14",
+          "pageStart": 188,
+          "pageEnd": 192,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lr8isw",
+          "date": "2026-10-16",
+          "pageStart": 193,
+          "pageEnd": 197,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lfrqi6",
+          "date": "2026-10-18",
+          "pageStart": 198,
+          "pageEnd": 202,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l4ydwn",
+          "date": "2026-10-20",
+          "pageStart": 203,
+          "pageEnd": 207,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2loqkf2",
+          "date": "2026-10-21",
+          "pageStart": 208,
+          "pageEnd": 212,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lo68vh",
+          "date": "2026-10-23",
+          "pageStart": 213,
+          "pageEnd": 217,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l8t68y",
+          "date": "2026-10-25",
+          "pageStart": 218,
+          "pageEnd": 222,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lh0n68",
+          "date": "2026-10-27",
+          "pageStart": 223,
+          "pageEnd": 227,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2ltg1bz",
+          "date": "2026-10-28",
+          "pageStart": 228,
+          "pageEnd": 232,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lnzspi",
+          "date": "2026-10-30",
+          "pageStart": 233,
+          "pageEnd": 237,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2leyr7r",
+          "date": "2026-11-01",
+          "pageStart": 238,
+          "pageEnd": 242,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lnksfp",
+          "date": "2026-11-03",
+          "pageStart": 243,
+          "pageEnd": 247,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2ltdmcr",
+          "date": "2026-11-04",
+          "pageStart": 248,
+          "pageEnd": 252,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l2nj8r",
+          "date": "2026-11-06",
+          "pageStart": 253,
+          "pageEnd": 257,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lhg1fl",
+          "date": "2026-11-08",
+          "pageStart": 258,
+          "pageEnd": 262,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2le9kvw",
+          "date": "2026-11-10",
+          "pageStart": 263,
+          "pageEnd": 267,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lbmx3f",
+          "date": "2026-11-11",
+          "pageStart": 268,
+          "pageEnd": 272,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lgouck",
+          "date": "2026-11-13",
+          "pageStart": 273,
+          "pageEnd": 277,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2liuykl",
+          "date": "2026-11-15",
+          "pageStart": 278,
+          "pageEnd": 282,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lcli18",
+          "date": "2026-11-17",
+          "pageStart": 283,
+          "pageEnd": 287,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lyuile",
+          "date": "2026-11-18",
+          "pageStart": 288,
+          "pageEnd": 292,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l6jjg6",
+          "date": "2026-11-20",
+          "pageStart": 293,
+          "pageEnd": 297,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lm6jkj",
+          "date": "2026-11-22",
+          "pageStart": 298,
+          "pageEnd": 302,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lne1t2",
+          "date": "2026-11-24",
+          "pageStart": 303,
+          "pageEnd": 307,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2ldvoi2",
+          "date": "2026-11-25",
+          "pageStart": 308,
+          "pageEnd": 312,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l31ild",
+          "date": "2026-11-27",
+          "pageStart": 313,
+          "pageEnd": 317,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lby3ut",
+          "date": "2026-11-29",
+          "pageStart": 318,
+          "pageEnd": 322,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l51f56",
+          "date": "2026-12-01",
+          "pageStart": 323,
+          "pageEnd": 327,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l922xs",
+          "date": "2026-12-02",
+          "pageStart": 328,
+          "pageEnd": 332,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l9n5ep",
+          "date": "2026-12-04",
+          "pageStart": 333,
+          "pageEnd": 337,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lxhnrz",
+          "date": "2026-12-06",
+          "pageStart": 338,
+          "pageEnd": 342,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lkbysy",
+          "date": "2026-12-08",
+          "pageStart": 343,
+          "pageEnd": 347,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l9ly85",
+          "date": "2026-12-09",
+          "pageStart": 348,
+          "pageEnd": 352,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2lhmvj5",
+          "date": "2026-12-11",
+          "pageStart": 353,
+          "pageEnd": 357,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l4p6hq",
+          "date": "2026-12-13",
+          "pageStart": 358,
+          "pageEnd": 362,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l52ifo",
+          "date": "2026-12-15",
+          "pageStart": 363,
+          "pageEnd": 367,
+          "studied": false
+        },
+        {
+          "id": "msq1xb2l89slj",
+          "date": "2026-12-16",
+          "pageStart": 368,
+          "pageEnd": 372,
+          "studied": false
+        }
+      ],
       "assignedDays": [
         1,
-        4
-      ]
-    },
-    {
-      "id": "mspyyxubdewyy",
-      "title": "hayatu sahabah",
-      "subject": "Taareekh",
-      "totalPages": 145,
-      "hasFile": true,
-      "completed": false,
-      "completedAt": null,
-      "pageRangeStart": null,
-      "pageRangeEnd": null,
-      "actualFinishDate": null,
-      "days": [],
-      "assignedDays": [
+        4,
+        3,
         6
-      ]
-    },
-    {
-      "id": "mspz09psdfnyj",
-      "title": "quran vocabs",
-      "subject": "Arabic",
-      "totalPages": 75,
-      "hasFile": true,
-      "completed": false,
-      "completedAt": null,
-      "pageRangeStart": null,
-      "pageRangeEnd": null,
-      "actualFinishDate": null,
-      "days": [],
-      "assignedDays": [
-        6
-      ]
-    },
-    {
-      "id": "mspz5vvqtj869",
-      "title": "FQH Muyassar P2",
-      "subject": "Fiqh",
-      "totalPages": 370,
-      "hasFile": true,
-      "completed": false,
-      "completedAt": null,
-      "pageRangeStart": null,
-      "pageRangeEnd": null,
-      "actualFinishDate": null,
-      "days": [],
-      "assignedDays": [
-        2,
-        5
       ]
     },
     {
@@ -72,6 +523,1481 @@
       "title": "mustalah",
       "subject": "Mustalaht Ul Hadeeth",
       "totalPages": 95,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 95,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msq23hdohrax4",
+          "date": "2026-08-17",
+          "pageStart": 1,
+          "pageEnd": 3,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoaclhn",
+          "date": "2026-08-20",
+          "pageStart": 4,
+          "pageEnd": 6,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoxrz6l",
+          "date": "2026-08-24",
+          "pageStart": 7,
+          "pageEnd": 9,
+          "studied": false
+        },
+        {
+          "id": "msq23hdotc1iw",
+          "date": "2026-08-27",
+          "pageStart": 10,
+          "pageEnd": 12,
+          "studied": false
+        },
+        {
+          "id": "msq23hdop874i",
+          "date": "2026-08-31",
+          "pageStart": 13,
+          "pageEnd": 15,
+          "studied": false
+        },
+        {
+          "id": "msq23hdosbvdj",
+          "date": "2026-09-03",
+          "pageStart": 16,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msq23hdolczi5",
+          "date": "2026-09-07",
+          "pageStart": 19,
+          "pageEnd": 21,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo1q7g2",
+          "date": "2026-09-10",
+          "pageStart": 22,
+          "pageEnd": 24,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo2exes",
+          "date": "2026-09-14",
+          "pageStart": 25,
+          "pageEnd": 27,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo4f5wp",
+          "date": "2026-09-17",
+          "pageStart": 28,
+          "pageEnd": 30,
+          "studied": false
+        },
+        {
+          "id": "msq23hdon96nh",
+          "date": "2026-09-21",
+          "pageStart": 31,
+          "pageEnd": 33,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo6whtp",
+          "date": "2026-09-24",
+          "pageStart": 34,
+          "pageEnd": 36,
+          "studied": false
+        },
+        {
+          "id": "msq23hdodc9dj",
+          "date": "2026-09-28",
+          "pageStart": 37,
+          "pageEnd": 39,
+          "studied": false
+        },
+        {
+          "id": "msq23hdodw871",
+          "date": "2026-10-01",
+          "pageStart": 40,
+          "pageEnd": 42,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoboyul",
+          "date": "2026-10-05",
+          "pageStart": 43,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msq23hdowxnj3",
+          "date": "2026-10-08",
+          "pageStart": 46,
+          "pageEnd": 48,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo8y5os",
+          "date": "2026-10-12",
+          "pageStart": 49,
+          "pageEnd": 51,
+          "studied": false
+        },
+        {
+          "id": "msq23hdovluyj",
+          "date": "2026-10-15",
+          "pageStart": 52,
+          "pageEnd": 54,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoasphc",
+          "date": "2026-10-19",
+          "pageStart": 55,
+          "pageEnd": 57,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo8bueg",
+          "date": "2026-10-22",
+          "pageStart": 58,
+          "pageEnd": 60,
+          "studied": false
+        },
+        {
+          "id": "msq23hdonq7qs",
+          "date": "2026-10-26",
+          "pageStart": 61,
+          "pageEnd": 63,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoatote",
+          "date": "2026-10-29",
+          "pageStart": 64,
+          "pageEnd": 66,
+          "studied": false
+        },
+        {
+          "id": "msq23hdokxqg6",
+          "date": "2026-11-02",
+          "pageStart": 67,
+          "pageEnd": 69,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo4mvp5",
+          "date": "2026-11-05",
+          "pageStart": 70,
+          "pageEnd": 71,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo5hpag",
+          "date": "2026-11-09",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo3pe4y",
+          "date": "2026-11-12",
+          "pageStart": 74,
+          "pageEnd": 75,
+          "studied": false
+        },
+        {
+          "id": "msq23hdocvnvt",
+          "date": "2026-11-16",
+          "pageStart": 76,
+          "pageEnd": 77,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoeqtsj",
+          "date": "2026-11-19",
+          "pageStart": 78,
+          "pageEnd": 79,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo6f11v",
+          "date": "2026-11-23",
+          "pageStart": 80,
+          "pageEnd": 81,
+          "studied": false
+        },
+        {
+          "id": "msq23hdodfanb",
+          "date": "2026-11-26",
+          "pageStart": 82,
+          "pageEnd": 83,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo73g76",
+          "date": "2026-11-30",
+          "pageStart": 84,
+          "pageEnd": 85,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoh08hy",
+          "date": "2026-12-03",
+          "pageStart": 86,
+          "pageEnd": 87,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoyon51",
+          "date": "2026-12-07",
+          "pageStart": 88,
+          "pageEnd": 89,
+          "studied": false
+        },
+        {
+          "id": "msq23hdoal7g2",
+          "date": "2026-12-10",
+          "pageStart": 90,
+          "pageEnd": 91,
+          "studied": false
+        },
+        {
+          "id": "msq23hdodum3w",
+          "date": "2026-12-14",
+          "pageStart": 92,
+          "pageEnd": 93,
+          "studied": false
+        },
+        {
+          "id": "msq23hdo7wib3",
+          "date": "2026-12-17",
+          "pageStart": 94,
+          "pageEnd": 95,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        2,
+        5
+      ]
+    },
+    {
+      "id": "msq5zf5q2vnwu",
+      "title": "hayatu sahabah",
+      "subject": "Taareekh",
+      "totalPages": 145,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 145,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msq5zvhhci9n6",
+          "date": "2026-08-18",
+          "pageStart": 1,
+          "pageEnd": 3,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhrcv5w",
+          "date": "2026-08-19",
+          "pageStart": 4,
+          "pageEnd": 6,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhrq8vv",
+          "date": "2026-08-21",
+          "pageStart": 7,
+          "pageEnd": 9,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhwadpi",
+          "date": "2026-08-25",
+          "pageStart": 10,
+          "pageEnd": 12,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhlj64e",
+          "date": "2026-08-26",
+          "pageStart": 13,
+          "pageEnd": 15,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh0fcvb",
+          "date": "2026-08-28",
+          "pageStart": 16,
+          "pageEnd": 18,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh3rzd1",
+          "date": "2026-09-01",
+          "pageStart": 19,
+          "pageEnd": 21,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhbjps1",
+          "date": "2026-09-02",
+          "pageStart": 22,
+          "pageEnd": 24,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhphi5n",
+          "date": "2026-09-04",
+          "pageStart": 25,
+          "pageEnd": 27,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhm2rxl",
+          "date": "2026-09-08",
+          "pageStart": 28,
+          "pageEnd": 30,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhu6vtj",
+          "date": "2026-09-09",
+          "pageStart": 31,
+          "pageEnd": 33,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhw210j",
+          "date": "2026-09-11",
+          "pageStart": 34,
+          "pageEnd": 36,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhav05o",
+          "date": "2026-09-15",
+          "pageStart": 37,
+          "pageEnd": 39,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhdb15t",
+          "date": "2026-09-16",
+          "pageStart": 40,
+          "pageEnd": 42,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhv4f8y",
+          "date": "2026-09-18",
+          "pageStart": 43,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhuvo1f",
+          "date": "2026-09-22",
+          "pageStart": 46,
+          "pageEnd": 48,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh72hhn",
+          "date": "2026-09-23",
+          "pageStart": 49,
+          "pageEnd": 51,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhay1ll",
+          "date": "2026-09-25",
+          "pageStart": 52,
+          "pageEnd": 54,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhx2e1w",
+          "date": "2026-09-29",
+          "pageStart": 55,
+          "pageEnd": 57,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhtenc7",
+          "date": "2026-09-30",
+          "pageStart": 58,
+          "pageEnd": 60,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhdznsw",
+          "date": "2026-10-02",
+          "pageStart": 61,
+          "pageEnd": 63,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhfqqwl",
+          "date": "2026-10-06",
+          "pageStart": 64,
+          "pageEnd": 66,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhpqrct",
+          "date": "2026-10-07",
+          "pageStart": 67,
+          "pageEnd": 69,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhuh10o",
+          "date": "2026-10-09",
+          "pageStart": 70,
+          "pageEnd": 72,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhf89v2",
+          "date": "2026-10-13",
+          "pageStart": 73,
+          "pageEnd": 75,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh9xbhd",
+          "date": "2026-10-14",
+          "pageStart": 76,
+          "pageEnd": 78,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh548xk",
+          "date": "2026-10-16",
+          "pageStart": 79,
+          "pageEnd": 81,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhfdjok",
+          "date": "2026-10-20",
+          "pageStart": 82,
+          "pageEnd": 84,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhkd1yg",
+          "date": "2026-10-21",
+          "pageStart": 85,
+          "pageEnd": 87,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh85lac",
+          "date": "2026-10-23",
+          "pageStart": 88,
+          "pageEnd": 90,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhpuy3g",
+          "date": "2026-10-27",
+          "pageStart": 91,
+          "pageEnd": 93,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhd9zox",
+          "date": "2026-10-28",
+          "pageStart": 94,
+          "pageEnd": 96,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh2u0g8",
+          "date": "2026-10-30",
+          "pageStart": 97,
+          "pageEnd": 99,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh7hla6",
+          "date": "2026-11-03",
+          "pageStart": 100,
+          "pageEnd": 102,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhsaxz6",
+          "date": "2026-11-04",
+          "pageStart": 103,
+          "pageEnd": 105,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhdwayb",
+          "date": "2026-11-06",
+          "pageStart": 106,
+          "pageEnd": 108,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh9uc9n",
+          "date": "2026-11-10",
+          "pageStart": 109,
+          "pageEnd": 111,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh83ldc",
+          "date": "2026-11-11",
+          "pageStart": 112,
+          "pageEnd": 114,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh8sl1e",
+          "date": "2026-11-13",
+          "pageStart": 115,
+          "pageEnd": 117,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh9oco1",
+          "date": "2026-11-17",
+          "pageStart": 118,
+          "pageEnd": 119,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh67qbi",
+          "date": "2026-11-18",
+          "pageStart": 120,
+          "pageEnd": 121,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhydcwo",
+          "date": "2026-11-20",
+          "pageStart": 122,
+          "pageEnd": 123,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhf76yx",
+          "date": "2026-11-24",
+          "pageStart": 124,
+          "pageEnd": 125,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhko0us",
+          "date": "2026-11-25",
+          "pageStart": 126,
+          "pageEnd": 127,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhn1ctz",
+          "date": "2026-11-27",
+          "pageStart": 128,
+          "pageEnd": 129,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhnl6zd",
+          "date": "2026-12-01",
+          "pageStart": 130,
+          "pageEnd": 131,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh17kj3",
+          "date": "2026-12-02",
+          "pageStart": 132,
+          "pageEnd": 133,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhc3eb9",
+          "date": "2026-12-04",
+          "pageStart": 134,
+          "pageEnd": 135,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhkn703",
+          "date": "2026-12-08",
+          "pageStart": 136,
+          "pageEnd": 137,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh3wyg0",
+          "date": "2026-12-09",
+          "pageStart": 138,
+          "pageEnd": 139,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhh5t18g",
+          "date": "2026-12-11",
+          "pageStart": 140,
+          "pageEnd": 141,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhuts7r",
+          "date": "2026-12-15",
+          "pageStart": 142,
+          "pageEnd": 143,
+          "studied": false
+        },
+        {
+          "id": "msq5zvhhi8lw7",
+          "date": "2026-12-16",
+          "pageStart": 144,
+          "pageEnd": 145,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        4,
+        6,
+        3
+      ]
+    },
+    {
+      "id": "msq60o459b31h",
+      "title": "quran vocab",
+      "subject": "Arabic",
+      "totalPages": 75,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 75,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msq60y21w2cl0",
+          "date": "2026-08-17",
+          "pageStart": 1,
+          "pageEnd": 3,
+          "studied": false
+        },
+        {
+          "id": "msq60y218ou17",
+          "date": "2026-08-20",
+          "pageStart": 4,
+          "pageEnd": 6,
+          "studied": false
+        },
+        {
+          "id": "msq60y21a4txw",
+          "date": "2026-08-24",
+          "pageStart": 7,
+          "pageEnd": 9,
+          "studied": false
+        },
+        {
+          "id": "msq60y217wc3h",
+          "date": "2026-08-27",
+          "pageStart": 10,
+          "pageEnd": 11,
+          "studied": false
+        },
+        {
+          "id": "msq60y21ttpo3",
+          "date": "2026-08-31",
+          "pageStart": 12,
+          "pageEnd": 13,
+          "studied": false
+        },
+        {
+          "id": "msq60y21kr7ke",
+          "date": "2026-09-03",
+          "pageStart": 14,
+          "pageEnd": 15,
+          "studied": false
+        },
+        {
+          "id": "msq60y215blbx",
+          "date": "2026-09-07",
+          "pageStart": 16,
+          "pageEnd": 17,
+          "studied": false
+        },
+        {
+          "id": "msq60y21tjmr6",
+          "date": "2026-09-10",
+          "pageStart": 18,
+          "pageEnd": 19,
+          "studied": false
+        },
+        {
+          "id": "msq60y21c62ji",
+          "date": "2026-09-14",
+          "pageStart": 20,
+          "pageEnd": 21,
+          "studied": false
+        },
+        {
+          "id": "msq60y21dhjsj",
+          "date": "2026-09-17",
+          "pageStart": 22,
+          "pageEnd": 23,
+          "studied": false
+        },
+        {
+          "id": "msq60y21hmg9a",
+          "date": "2026-09-21",
+          "pageStart": 24,
+          "pageEnd": 25,
+          "studied": false
+        },
+        {
+          "id": "msq60y21xjmk9",
+          "date": "2026-09-24",
+          "pageStart": 26,
+          "pageEnd": 27,
+          "studied": false
+        },
+        {
+          "id": "msq60y21g3bnl",
+          "date": "2026-09-28",
+          "pageStart": 28,
+          "pageEnd": 29,
+          "studied": false
+        },
+        {
+          "id": "msq60y2149b4y",
+          "date": "2026-10-01",
+          "pageStart": 30,
+          "pageEnd": 31,
+          "studied": false
+        },
+        {
+          "id": "msq60y21pri43",
+          "date": "2026-10-05",
+          "pageStart": 32,
+          "pageEnd": 33,
+          "studied": false
+        },
+        {
+          "id": "msq60y216481l",
+          "date": "2026-10-08",
+          "pageStart": 34,
+          "pageEnd": 35,
+          "studied": false
+        },
+        {
+          "id": "msq60y219hcyx",
+          "date": "2026-10-12",
+          "pageStart": 36,
+          "pageEnd": 37,
+          "studied": false
+        },
+        {
+          "id": "msq60y21011rj",
+          "date": "2026-10-15",
+          "pageStart": 38,
+          "pageEnd": 39,
+          "studied": false
+        },
+        {
+          "id": "msq60y21jfmqw",
+          "date": "2026-10-19",
+          "pageStart": 40,
+          "pageEnd": 41,
+          "studied": false
+        },
+        {
+          "id": "msq60y21ix02m",
+          "date": "2026-10-22",
+          "pageStart": 42,
+          "pageEnd": 43,
+          "studied": false
+        },
+        {
+          "id": "msq60y21f61cv",
+          "date": "2026-10-26",
+          "pageStart": 44,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msq60y2131n61",
+          "date": "2026-10-29",
+          "pageStart": 46,
+          "pageEnd": 47,
+          "studied": false
+        },
+        {
+          "id": "msq60y22gj6cx",
+          "date": "2026-11-02",
+          "pageStart": 48,
+          "pageEnd": 49,
+          "studied": false
+        },
+        {
+          "id": "msq60y22gv3f6",
+          "date": "2026-11-05",
+          "pageStart": 50,
+          "pageEnd": 51,
+          "studied": false
+        },
+        {
+          "id": "msq60y22t7mkt",
+          "date": "2026-11-09",
+          "pageStart": 52,
+          "pageEnd": 53,
+          "studied": false
+        },
+        {
+          "id": "msq60y22y9c2a",
+          "date": "2026-11-12",
+          "pageStart": 54,
+          "pageEnd": 55,
+          "studied": false
+        },
+        {
+          "id": "msq60y22w2lwd",
+          "date": "2026-11-16",
+          "pageStart": 56,
+          "pageEnd": 57,
+          "studied": false
+        },
+        {
+          "id": "msq60y229mofu",
+          "date": "2026-11-19",
+          "pageStart": 58,
+          "pageEnd": 59,
+          "studied": false
+        },
+        {
+          "id": "msq60y220pktg",
+          "date": "2026-11-23",
+          "pageStart": 60,
+          "pageEnd": 61,
+          "studied": false
+        },
+        {
+          "id": "msq60y22o6mn8",
+          "date": "2026-11-26",
+          "pageStart": 62,
+          "pageEnd": 63,
+          "studied": false
+        },
+        {
+          "id": "msq60y22xqxkn",
+          "date": "2026-11-30",
+          "pageStart": 64,
+          "pageEnd": 65,
+          "studied": false
+        },
+        {
+          "id": "msq60y226hns5",
+          "date": "2026-12-03",
+          "pageStart": 66,
+          "pageEnd": 67,
+          "studied": false
+        },
+        {
+          "id": "msq60y22yhy6u",
+          "date": "2026-12-07",
+          "pageStart": 68,
+          "pageEnd": 69,
+          "studied": false
+        },
+        {
+          "id": "msq60y2266tkf",
+          "date": "2026-12-10",
+          "pageStart": 70,
+          "pageEnd": 71,
+          "studied": false
+        },
+        {
+          "id": "msq60y22whwyz",
+          "date": "2026-12-14",
+          "pageStart": 72,
+          "pageEnd": 73,
+          "studied": false
+        },
+        {
+          "id": "msq60y2231tm0",
+          "date": "2026-12-17",
+          "pageStart": 74,
+          "pageEnd": 75,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        2,
+        5
+      ]
+    },
+    {
+      "id": "msq62a3k0wyde",
+      "title": "riyadh salihen",
+      "subject": "Hadeeth",
+      "totalPages": 336,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": 1,
+      "pageRangeEnd": 336,
+      "actualFinishDate": null,
+      "days": [
+        {
+          "id": "msq62kko4596c",
+          "date": "2026-08-16",
+          "pageStart": 1,
+          "pageEnd": 5,
+          "studied": false
+        },
+        {
+          "id": "msq62kko89ty9",
+          "date": "2026-08-18",
+          "pageStart": 6,
+          "pageEnd": 10,
+          "studied": false
+        },
+        {
+          "id": "msq62kkokq7yh",
+          "date": "2026-08-19",
+          "pageStart": 11,
+          "pageEnd": 15,
+          "studied": false
+        },
+        {
+          "id": "msq62kkonxgfo",
+          "date": "2026-08-21",
+          "pageStart": 16,
+          "pageEnd": 20,
+          "studied": false
+        },
+        {
+          "id": "msq62kko4nhx3",
+          "date": "2026-08-23",
+          "pageStart": 21,
+          "pageEnd": 25,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoae1ey",
+          "date": "2026-08-25",
+          "pageStart": 26,
+          "pageEnd": 30,
+          "studied": false
+        },
+        {
+          "id": "msq62kkojikk2",
+          "date": "2026-08-26",
+          "pageStart": 31,
+          "pageEnd": 35,
+          "studied": false
+        },
+        {
+          "id": "msq62kkov7s3l",
+          "date": "2026-08-28",
+          "pageStart": 36,
+          "pageEnd": 40,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoez8vc",
+          "date": "2026-08-30",
+          "pageStart": 41,
+          "pageEnd": 45,
+          "studied": false
+        },
+        {
+          "id": "msq62kkop8824",
+          "date": "2026-09-01",
+          "pageStart": 46,
+          "pageEnd": 50,
+          "studied": false
+        },
+        {
+          "id": "msq62kko8cn5p",
+          "date": "2026-09-02",
+          "pageStart": 51,
+          "pageEnd": 55,
+          "studied": false
+        },
+        {
+          "id": "msq62kkosqwbz",
+          "date": "2026-09-04",
+          "pageStart": 56,
+          "pageEnd": 60,
+          "studied": false
+        },
+        {
+          "id": "msq62kkofyjsy",
+          "date": "2026-09-06",
+          "pageStart": 61,
+          "pageEnd": 65,
+          "studied": false
+        },
+        {
+          "id": "msq62kkocl5qx",
+          "date": "2026-09-08",
+          "pageStart": 66,
+          "pageEnd": 70,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoz4tpn",
+          "date": "2026-09-09",
+          "pageStart": 71,
+          "pageEnd": 75,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoegyg5",
+          "date": "2026-09-11",
+          "pageStart": 76,
+          "pageEnd": 80,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoubuxa",
+          "date": "2026-09-13",
+          "pageStart": 81,
+          "pageEnd": 85,
+          "studied": false
+        },
+        {
+          "id": "msq62kkohuyr9",
+          "date": "2026-09-15",
+          "pageStart": 86,
+          "pageEnd": 90,
+          "studied": false
+        },
+        {
+          "id": "msq62kkob6a7h",
+          "date": "2026-09-16",
+          "pageStart": 91,
+          "pageEnd": 95,
+          "studied": false
+        },
+        {
+          "id": "msq62kkotln52",
+          "date": "2026-09-18",
+          "pageStart": 96,
+          "pageEnd": 100,
+          "studied": false
+        },
+        {
+          "id": "msq62kko9igjj",
+          "date": "2026-09-20",
+          "pageStart": 101,
+          "pageEnd": 105,
+          "studied": false
+        },
+        {
+          "id": "msq62kkogl3se",
+          "date": "2026-09-22",
+          "pageStart": 106,
+          "pageEnd": 110,
+          "studied": false
+        },
+        {
+          "id": "msq62kko9kgni",
+          "date": "2026-09-23",
+          "pageStart": 111,
+          "pageEnd": 115,
+          "studied": false
+        },
+        {
+          "id": "msq62kkot9knn",
+          "date": "2026-09-25",
+          "pageStart": 116,
+          "pageEnd": 120,
+          "studied": false
+        },
+        {
+          "id": "msq62kko2g6ke",
+          "date": "2026-09-27",
+          "pageStart": 121,
+          "pageEnd": 125,
+          "studied": false
+        },
+        {
+          "id": "msq62kko3rs8c",
+          "date": "2026-09-29",
+          "pageStart": 126,
+          "pageEnd": 130,
+          "studied": false
+        },
+        {
+          "id": "msq62kko853m7",
+          "date": "2026-09-30",
+          "pageStart": 131,
+          "pageEnd": 135,
+          "studied": false
+        },
+        {
+          "id": "msq62kkozuf47",
+          "date": "2026-10-02",
+          "pageStart": 136,
+          "pageEnd": 140,
+          "studied": false
+        },
+        {
+          "id": "msq62kkod9ta4",
+          "date": "2026-10-04",
+          "pageStart": 141,
+          "pageEnd": 145,
+          "studied": false
+        },
+        {
+          "id": "msq62kko61zxp",
+          "date": "2026-10-06",
+          "pageStart": 146,
+          "pageEnd": 150,
+          "studied": false
+        },
+        {
+          "id": "msq62kkotg5qh",
+          "date": "2026-10-07",
+          "pageStart": 151,
+          "pageEnd": 155,
+          "studied": false
+        },
+        {
+          "id": "msq62kko6rkx5",
+          "date": "2026-10-09",
+          "pageStart": 156,
+          "pageEnd": 160,
+          "studied": false
+        },
+        {
+          "id": "msq62kko8pp85",
+          "date": "2026-10-11",
+          "pageStart": 161,
+          "pageEnd": 165,
+          "studied": false
+        },
+        {
+          "id": "msq62kkotskxt",
+          "date": "2026-10-13",
+          "pageStart": 166,
+          "pageEnd": 170,
+          "studied": false
+        },
+        {
+          "id": "msq62kkos2cjl",
+          "date": "2026-10-14",
+          "pageStart": 171,
+          "pageEnd": 175,
+          "studied": false
+        },
+        {
+          "id": "msq62kkou9pu8",
+          "date": "2026-10-16",
+          "pageStart": 176,
+          "pageEnd": 180,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoa5pyb",
+          "date": "2026-10-18",
+          "pageStart": 181,
+          "pageEnd": 185,
+          "studied": false
+        },
+        {
+          "id": "msq62kkowv50d",
+          "date": "2026-10-20",
+          "pageStart": 186,
+          "pageEnd": 190,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoyb84o",
+          "date": "2026-10-21",
+          "pageStart": 191,
+          "pageEnd": 195,
+          "studied": false
+        },
+        {
+          "id": "msq62kkojovxp",
+          "date": "2026-10-23",
+          "pageStart": 196,
+          "pageEnd": 200,
+          "studied": false
+        },
+        {
+          "id": "msq62kkow1d21",
+          "date": "2026-10-25",
+          "pageStart": 201,
+          "pageEnd": 205,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoxwr9c",
+          "date": "2026-10-27",
+          "pageStart": 206,
+          "pageEnd": 210,
+          "studied": false
+        },
+        {
+          "id": "msq62kko6c2yr",
+          "date": "2026-10-28",
+          "pageStart": 211,
+          "pageEnd": 215,
+          "studied": false
+        },
+        {
+          "id": "msq62kkorp6uo",
+          "date": "2026-10-30",
+          "pageStart": 216,
+          "pageEnd": 220,
+          "studied": false
+        },
+        {
+          "id": "msq62kko9hmwp",
+          "date": "2026-11-01",
+          "pageStart": 221,
+          "pageEnd": 225,
+          "studied": false
+        },
+        {
+          "id": "msq62kko8rf5l",
+          "date": "2026-11-03",
+          "pageStart": 226,
+          "pageEnd": 230,
+          "studied": false
+        },
+        {
+          "id": "msq62kkocvou0",
+          "date": "2026-11-04",
+          "pageStart": 231,
+          "pageEnd": 235,
+          "studied": false
+        },
+        {
+          "id": "msq62kkodtoqo",
+          "date": "2026-11-06",
+          "pageStart": 236,
+          "pageEnd": 240,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoulr57",
+          "date": "2026-11-08",
+          "pageStart": 241,
+          "pageEnd": 245,
+          "studied": false
+        },
+        {
+          "id": "msq62kko8gakj",
+          "date": "2026-11-10",
+          "pageStart": 246,
+          "pageEnd": 250,
+          "studied": false
+        },
+        {
+          "id": "msq62kkox6xec",
+          "date": "2026-11-11",
+          "pageStart": 251,
+          "pageEnd": 255,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoe1ydn",
+          "date": "2026-11-13",
+          "pageStart": 256,
+          "pageEnd": 260,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoylttd",
+          "date": "2026-11-15",
+          "pageStart": 261,
+          "pageEnd": 264,
+          "studied": false
+        },
+        {
+          "id": "msq62kko2wrdm",
+          "date": "2026-11-17",
+          "pageStart": 265,
+          "pageEnd": 268,
+          "studied": false
+        },
+        {
+          "id": "msq62kkox7ng5",
+          "date": "2026-11-18",
+          "pageStart": 269,
+          "pageEnd": 272,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoj8pwh",
+          "date": "2026-11-20",
+          "pageStart": 273,
+          "pageEnd": 276,
+          "studied": false
+        },
+        {
+          "id": "msq62kkogyym3",
+          "date": "2026-11-22",
+          "pageStart": 277,
+          "pageEnd": 280,
+          "studied": false
+        },
+        {
+          "id": "msq62kkohfhf4",
+          "date": "2026-11-24",
+          "pageStart": 281,
+          "pageEnd": 284,
+          "studied": false
+        },
+        {
+          "id": "msq62kkojq3va",
+          "date": "2026-11-25",
+          "pageStart": 285,
+          "pageEnd": 288,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoepryb",
+          "date": "2026-11-27",
+          "pageStart": 289,
+          "pageEnd": 292,
+          "studied": false
+        },
+        {
+          "id": "msq62kkop70d8",
+          "date": "2026-11-29",
+          "pageStart": 293,
+          "pageEnd": 296,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoiqymn",
+          "date": "2026-12-01",
+          "pageStart": 297,
+          "pageEnd": 300,
+          "studied": false
+        },
+        {
+          "id": "msq62kkoop0k4",
+          "date": "2026-12-02",
+          "pageStart": 301,
+          "pageEnd": 304,
+          "studied": false
+        },
+        {
+          "id": "msq62kkonved3",
+          "date": "2026-12-04",
+          "pageStart": 305,
+          "pageEnd": 308,
+          "studied": false
+        },
+        {
+          "id": "msq62kkol6rp1",
+          "date": "2026-12-06",
+          "pageStart": 309,
+          "pageEnd": 312,
+          "studied": false
+        },
+        {
+          "id": "msq62kkond4q5",
+          "date": "2026-12-08",
+          "pageStart": 313,
+          "pageEnd": 316,
+          "studied": false
+        },
+        {
+          "id": "msq62kko4z9yn",
+          "date": "2026-12-09",
+          "pageStart": 317,
+          "pageEnd": 320,
+          "studied": false
+        },
+        {
+          "id": "msq62kko3x3qd",
+          "date": "2026-12-11",
+          "pageStart": 321,
+          "pageEnd": 324,
+          "studied": false
+        },
+        {
+          "id": "msq62kkof3ezi",
+          "date": "2026-12-13",
+          "pageStart": 325,
+          "pageEnd": 328,
+          "studied": false
+        },
+        {
+          "id": "msq62kkotxiqy",
+          "date": "2026-12-15",
+          "pageStart": 329,
+          "pageEnd": 332,
+          "studied": false
+        },
+        {
+          "id": "msq62kkokq8mr",
+          "date": "2026-12-16",
+          "pageStart": 333,
+          "pageEnd": 336,
+          "studied": false
+        }
+      ],
+      "assignedDays": [
+        4,
+        1,
+        3,
+        6
+      ]
+    },
+    {
+      "id": "msq6ahr53sdxw",
+      "title": "safwaw2",
+      "subject": "Tafseer",
+      "totalPages": 716,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": null,
+      "pageRangeEnd": null,
+      "actualFinishDate": null,
+      "days": [],
+      "assignedDays": []
+    },
+    {
+      "id": "msq6ctsbz7fs6",
+      "title": "qudoory",
+      "subject": "Taareekh",
+      "totalPages": 757,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": null,
+      "pageRangeEnd": null,
+      "actualFinishDate": null,
+      "days": [],
+      "assignedDays": []
+    },
+    {
+      "id": "msq6e6wmgl1qn",
+      "title": "riyad salihen P2",
+      "subject": "Hadeeth",
+      "totalPages": 343,
       "hasFile": true,
       "completed": false,
       "completedAt": null,
@@ -88,29 +2014,35 @@
       "name": "Year 1 · Semester 1",
       "bookIds": [
         "mspytekm1323d",
-        "mspyyxubdewyy",
-        "mspz09psdfnyj",
-        "mspz5vvqtj869",
-        "mspzymorndg3i"
+        "mspzymorndg3i",
+        "msq5zf5q2vnwu",
+        "msq60o459b31h",
+        "msq62a3k0wyde"
       ],
       "subjects": [
         "Tafseer",
         "Taareekh",
         "Arabic",
         "Mustalaht Ul Hadeeth",
-        "Fiqh"
+        "Fiqh",
+        "Hadeeth"
       ]
     },
     {
       "id": "y1s2",
       "name": "Year 1 · Semester 2",
-      "bookIds": [],
+      "bookIds": [
+        "msq6ahr53sdxw",
+        "msq6ctsbz7fs6",
+        "msq6e6wmgl1qn"
+      ],
       "subjects": [
         "Quran",
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Arabic"
+        "Arabic",
+        "Hadeeth"
       ]
     },
     {
@@ -235,8 +2167,8 @@
     }
   ],
   "schedule": {
-    "startDate": "2027-01-11",
-    "targetFinishDate": "2027-05-24",
+    "startDate": "2026-08-17",
+    "targetFinishDate": "2026-12-18",
     "schoolDays": [
       4,
       2,
