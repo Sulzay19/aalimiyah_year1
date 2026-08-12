@@ -1,11 +1,11 @@
 {
-  "exportedAt": "2026-08-11T16:56:04.663Z",
+  "exportedAt": "2026-08-12T11:22:04.514Z",
   "books": [
     {
-      "id": "msoqzwd6huxfm",
-      "title": "muqaddimah",
-      "subject": "Usool",
-      "totalPages": 115,
+      "id": "mspytekm1323d",
+      "title": "safwah",
+      "subject": "Tafseer",
+      "totalPages": 716,
       "hasFile": true,
       "completed": false,
       "completedAt": null,
@@ -13,11 +13,30 @@
       "pageRangeEnd": null,
       "actualFinishDate": null,
       "days": [],
-      "assignedDays": []
+      "assignedDays": [
+        1,
+        4
+      ]
     },
     {
-      "id": "msor0yq8d3ric",
-      "title": "quran dictionary",
+      "id": "mspyyxubdewyy",
+      "title": "hayatu sahabah",
+      "subject": "Taareekh",
+      "totalPages": 145,
+      "hasFile": true,
+      "completed": false,
+      "completedAt": null,
+      "pageRangeStart": null,
+      "pageRangeEnd": null,
+      "actualFinishDate": null,
+      "days": [],
+      "assignedDays": [
+        6
+      ]
+    },
+    {
+      "id": "mspz09psdfnyj",
+      "title": "quran vocabs",
       "subject": "Arabic",
       "totalPages": 75,
       "hasFile": true,
@@ -27,573 +46,33 @@
       "pageRangeEnd": null,
       "actualFinishDate": null,
       "days": [],
-      "assignedDays": []
-    },
-    {
-      "id": "msov8es1twpzd",
-      "title": "safwah",
-      "subject": "Tafseer",
-      "totalPages": 716,
-      "hasFile": true,
-      "completed": false,
-      "completedAt": null,
-      "pageRangeStart": 464,
-      "pageRangeEnd": 716,
-      "actualFinishDate": null,
-      "days": [
-        {
-          "id": "msoviiuvauzaz",
-          "date": "2026-08-16",
-          "pageStart": 464,
-          "pageEnd": 467,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv85mvk",
-          "date": "2026-08-17",
-          "pageStart": 468,
-          "pageEnd": 471,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv1976n",
-          "date": "2026-08-19",
-          "pageStart": 472,
-          "pageEnd": 475,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvmkoxe",
-          "date": "2026-08-21",
-          "pageStart": 476,
-          "pageEnd": 479,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvpqrba",
-          "date": "2026-08-23",
-          "pageStart": 480,
-          "pageEnd": 483,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvflpku",
-          "date": "2026-08-24",
-          "pageStart": 484,
-          "pageEnd": 487,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvbldcs",
-          "date": "2026-08-26",
-          "pageStart": 488,
-          "pageEnd": 491,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvp58zz",
-          "date": "2026-08-28",
-          "pageStart": 492,
-          "pageEnd": 495,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv1bo5f",
-          "date": "2026-08-30",
-          "pageStart": 496,
-          "pageEnd": 499,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvf62s8",
-          "date": "2026-08-31",
-          "pageStart": 500,
-          "pageEnd": 503,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvhzrpa",
-          "date": "2026-09-02",
-          "pageStart": 504,
-          "pageEnd": 507,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvlixlf",
-          "date": "2026-09-04",
-          "pageStart": 508,
-          "pageEnd": 511,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv1jyqy",
-          "date": "2026-09-06",
-          "pageStart": 512,
-          "pageEnd": 515,
-          "studied": false
-        },
-        {
-          "id": "msoviiuveqz85",
-          "date": "2026-09-07",
-          "pageStart": 516,
-          "pageEnd": 519,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvkghed",
-          "date": "2026-09-09",
-          "pageStart": 520,
-          "pageEnd": 523,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvfgwq0",
-          "date": "2026-09-11",
-          "pageStart": 524,
-          "pageEnd": 527,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv9bgpw",
-          "date": "2026-09-13",
-          "pageStart": 528,
-          "pageEnd": 531,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv3l0un",
-          "date": "2026-09-14",
-          "pageStart": 532,
-          "pageEnd": 535,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvo4f2d",
-          "date": "2026-09-16",
-          "pageStart": 536,
-          "pageEnd": 539,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvkay41",
-          "date": "2026-09-18",
-          "pageStart": 540,
-          "pageEnd": 543,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvrurn5",
-          "date": "2026-09-20",
-          "pageStart": 544,
-          "pageEnd": 547,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvgtbov",
-          "date": "2026-09-21",
-          "pageStart": 548,
-          "pageEnd": 551,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvdvqn7",
-          "date": "2026-09-23",
-          "pageStart": 552,
-          "pageEnd": 555,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv6oxum",
-          "date": "2026-09-25",
-          "pageStart": 556,
-          "pageEnd": 559,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv6hzjn",
-          "date": "2026-09-27",
-          "pageStart": 560,
-          "pageEnd": 563,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvotiqf",
-          "date": "2026-09-28",
-          "pageStart": 564,
-          "pageEnd": 567,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvhnejz",
-          "date": "2026-09-30",
-          "pageStart": 568,
-          "pageEnd": 571,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvrvzhr",
-          "date": "2026-10-02",
-          "pageStart": 572,
-          "pageEnd": 575,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvxnvw0",
-          "date": "2026-10-04",
-          "pageStart": 576,
-          "pageEnd": 578,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv38fdv",
-          "date": "2026-10-05",
-          "pageStart": 579,
-          "pageEnd": 581,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv1ha4p",
-          "date": "2026-10-07",
-          "pageStart": 582,
-          "pageEnd": 584,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv0gb0t",
-          "date": "2026-10-09",
-          "pageStart": 585,
-          "pageEnd": 587,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvflw38",
-          "date": "2026-10-11",
-          "pageStart": 588,
-          "pageEnd": 590,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvbuek9",
-          "date": "2026-10-12",
-          "pageStart": 591,
-          "pageEnd": 593,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvi4yni",
-          "date": "2026-10-14",
-          "pageStart": 594,
-          "pageEnd": 596,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv2x6vl",
-          "date": "2026-10-16",
-          "pageStart": 597,
-          "pageEnd": 599,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvpn8mn",
-          "date": "2026-10-18",
-          "pageStart": 600,
-          "pageEnd": 602,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv94zz6",
-          "date": "2026-10-19",
-          "pageStart": 603,
-          "pageEnd": 605,
-          "studied": false
-        },
-        {
-          "id": "msoviiuviprqv",
-          "date": "2026-10-21",
-          "pageStart": 606,
-          "pageEnd": 608,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv3eica",
-          "date": "2026-10-23",
-          "pageStart": 609,
-          "pageEnd": 611,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvfmsa7",
-          "date": "2026-10-25",
-          "pageStart": 612,
-          "pageEnd": 614,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvvkkyo",
-          "date": "2026-10-26",
-          "pageStart": 615,
-          "pageEnd": 617,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv4qzmw",
-          "date": "2026-10-28",
-          "pageStart": 618,
-          "pageEnd": 620,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvass7q",
-          "date": "2026-10-30",
-          "pageStart": 621,
-          "pageEnd": 623,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv3hzgq",
-          "date": "2026-11-01",
-          "pageStart": 624,
-          "pageEnd": 626,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvu0c2z",
-          "date": "2026-11-02",
-          "pageStart": 627,
-          "pageEnd": 629,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvgsont",
-          "date": "2026-11-04",
-          "pageStart": 630,
-          "pageEnd": 632,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvlvp3b",
-          "date": "2026-11-06",
-          "pageStart": 633,
-          "pageEnd": 635,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvzasa0",
-          "date": "2026-11-08",
-          "pageStart": 636,
-          "pageEnd": 638,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv4mjxi",
-          "date": "2026-11-09",
-          "pageStart": 639,
-          "pageEnd": 641,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv7777v",
-          "date": "2026-11-11",
-          "pageStart": 642,
-          "pageEnd": 644,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvjcl5c",
-          "date": "2026-11-13",
-          "pageStart": 645,
-          "pageEnd": 647,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvppgjp",
-          "date": "2026-11-15",
-          "pageStart": 648,
-          "pageEnd": 650,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvxrz2k",
-          "date": "2026-11-16",
-          "pageStart": 651,
-          "pageEnd": 653,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvzz95c",
-          "date": "2026-11-18",
-          "pageStart": 654,
-          "pageEnd": 656,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv9pe4o",
-          "date": "2026-11-20",
-          "pageStart": 657,
-          "pageEnd": 659,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvijuh9",
-          "date": "2026-11-22",
-          "pageStart": 660,
-          "pageEnd": 662,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvqtv8x",
-          "date": "2026-11-23",
-          "pageStart": 663,
-          "pageEnd": 665,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv4rsai",
-          "date": "2026-11-25",
-          "pageStart": 666,
-          "pageEnd": 668,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvy5fg1",
-          "date": "2026-11-27",
-          "pageStart": 669,
-          "pageEnd": 671,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvee7jy",
-          "date": "2026-11-29",
-          "pageStart": 672,
-          "pageEnd": 674,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvg2fca",
-          "date": "2026-11-30",
-          "pageStart": 675,
-          "pageEnd": 677,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvnct5i",
-          "date": "2026-12-02",
-          "pageStart": 678,
-          "pageEnd": 680,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvpvdsv",
-          "date": "2026-12-04",
-          "pageStart": 681,
-          "pageEnd": 683,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvu2dla",
-          "date": "2026-12-06",
-          "pageStart": 684,
-          "pageEnd": 686,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv5udww",
-          "date": "2026-12-07",
-          "pageStart": 687,
-          "pageEnd": 689,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv6px2s",
-          "date": "2026-12-09",
-          "pageStart": 690,
-          "pageEnd": 692,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvlvs7u",
-          "date": "2026-12-11",
-          "pageStart": 693,
-          "pageEnd": 695,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvyt9e0",
-          "date": "2026-12-13",
-          "pageStart": 696,
-          "pageEnd": 698,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv23pwr",
-          "date": "2026-12-14",
-          "pageStart": 699,
-          "pageEnd": 701,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvjn8m3",
-          "date": "2026-12-16",
-          "pageStart": 702,
-          "pageEnd": 704,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvvc9lx",
-          "date": "2026-12-18",
-          "pageStart": 705,
-          "pageEnd": 707,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvflvnq",
-          "date": "2026-12-20",
-          "pageStart": 708,
-          "pageEnd": 710,
-          "studied": false
-        },
-        {
-          "id": "msoviiuvus3tp",
-          "date": "2026-12-21",
-          "pageStart": 711,
-          "pageEnd": 713,
-          "studied": false
-        },
-        {
-          "id": "msoviiuv0166u",
-          "date": "2026-12-23",
-          "pageStart": 714,
-          "pageEnd": 716,
-          "studied": false
-        }
-      ],
       "assignedDays": [
-        4,
-        2,
-        1,
         6
       ]
     },
     {
-      "id": "msow2i6w2px4c",
-      "title": "safwah 2",
-      "subject": "Tafseer",
-      "totalPages": null,
-      "hasFile": false,
+      "id": "mspz5vvqtj869",
+      "title": "FQH Muyassar P2",
+      "subject": "Fiqh",
+      "totalPages": 370,
+      "hasFile": true,
       "completed": false,
       "completedAt": null,
       "pageRangeStart": null,
       "pageRangeEnd": null,
       "actualFinishDate": null,
       "days": [],
-      "assignedDays": []
+      "assignedDays": [
+        2,
+        5
+      ]
     },
     {
-      "id": "msow55my4c9vv",
-      "title": "safwah",
-      "subject": "Tafseer",
-      "totalPages": null,
-      "hasFile": false,
+      "id": "mspzymorndg3i",
+      "title": "mustalah",
+      "subject": "Mustalaht Ul Hadeeth",
+      "totalPages": 95,
+      "hasFile": true,
       "completed": false,
       "completedAt": null,
       "pageRangeStart": null,
@@ -608,43 +87,38 @@
       "id": "y1s1",
       "name": "Year 1 · Semester 1",
       "bookIds": [
-        "msoqzwd6huxfm",
-        "msor0yq8d3ric",
-        "msov8es1twpzd"
+        "mspytekm1323d",
+        "mspyyxubdewyy",
+        "mspz09psdfnyj",
+        "mspz5vvqtj869",
+        "mspzymorndg3i"
       ],
       "subjects": [
-        "Quran",
         "Tafseer",
-        "Fiqh",
         "Taareekh",
-        "Usool",
-        "Arabic"
+        "Arabic",
+        "Mustalaht Ul Hadeeth",
+        "Fiqh"
       ]
     },
     {
       "id": "y1s2",
       "name": "Year 1 · Semester 2",
-      "bookIds": [
-        "msow2i6w2px4c"
-      ],
+      "bookIds": [],
       "subjects": [
         "Quran",
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
     {
       "id": "y2s1",
       "name": "Year 2 · Semester 1",
-      "bookIds": [
-        "msow55my4c9vv"
-      ],
+      "bookIds": [],
       "subjects": [
         "Taareekh",
-        "Usool",
         "Arabic",
         "Quran",
         "Tafseer",
@@ -660,7 +134,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -673,7 +146,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -686,7 +158,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -699,7 +170,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -712,7 +182,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -725,7 +194,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -738,7 +206,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -751,7 +218,6 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     },
@@ -764,14 +230,13 @@
         "Tafseer",
         "Fiqh",
         "Taareekh",
-        "Usool",
         "Arabic"
       ]
     }
   ],
   "schedule": {
-    "startDate": "2026-08-17",
-    "targetFinishDate": "2026-12-24",
+    "startDate": "2027-01-11",
+    "targetFinishDate": "2027-05-24",
     "schoolDays": [
       4,
       2,
