@@ -675,6 +675,11 @@
         <input type="number" id="tPageTo" placeholder="e.g. 180">
       </div>
     </div>
+    <div>
+      <label>Max pages/day (optional)</label>
+      <input type="number" id="tMaxPages" min="1" placeholder="e.g. 3 or 4">
+      <div style="font-size:11px; color:var(--paper-dim); margin-top:4px; line-height:1.4;">Leave blank to split the range evenly between start and target dates (old behavior). Set a cap and each day will never exceed that many pages — the schedule stretches out to fit, and you'll get a notice if that lands after your target finish date.</div>
+    </div>
     <label>School days (shared)</label>
     <div class="weekday-picker" id="weekdayPicker"></div>
     <label style="margin-top:14px;">This subject's days (pick from above — aim for 2 subjects/day)</label>
@@ -2285,6 +2290,7 @@ function openScheduleModal(){
   document.getElementById('tTarget').value = schedule.targetFinishDate || '';
   document.getElementById('tPageFrom').value = book.pageRangeStart || 1;
   document.getElementById('tPageTo').value = book.pageRangeEnd || (book.totalPages || '');
+  document.getElementById('tMaxPages').value = book.maxPagesPerDay || '';
   selectedWeekdays = (schedule.schoolDays && schedule.schoolDays.length) ? schedule.schoolDays.slice() : DEFAULT_SCHOOL_DAYS.slice();
   selectedAssignedDays = (book.assignedDays && book.assignedDays.length) ? book.assignedDays.slice() : selectedWeekdays.slice();
   renderWeekdayPicker();
@@ -2296,6 +2302,9 @@ async function saveTermSchedule(){
   const to = parseInt(document.getElementById('tPageTo').value);
   const start = document.getElementById('tStart').value || null;
   const target = document.getElementById('tTarget').value || null;
+  const maxPagesRaw = document.getElementById('tMaxPages').value;
+  const maxPages = maxPagesRaw ? parseInt(maxPagesRaw) : null;
+  if(maxPagesRaw && (!maxPages || maxPages < 1)){ alert('Max pages/day must be a positive number.'); return; }
   if(!to){ alert('Set the last page this book should cover.'); return; }
   if(!start || !target){ alert('Set both a start date and a target finish date so a schedule can be built.'); return; }
   if(!selectedWeekdays.length){ alert('Pick at least one school day.'); return; }
@@ -2309,6 +2318,7 @@ async function saveTermSchedule(){
   book.pageRangeStart = from;
   book.pageRangeEnd = to;
   book.assignedDays = selectedAssignedDays.slice();
+  book.maxPagesPerDay = maxPages;
   buildSchedule(book, start, from); // auto-generate this book's days right away
   await saveBooks(books);
   closeModal('termModal');
@@ -2319,6 +2329,7 @@ async function clearBookSchedule(bookId){
   const book = books.find(b=>b.id===bookId);
   book.pageRangeStart = null;
   book.pageRangeEnd = null;
+  book.maxPagesPerDay = null;
   book.days = [];
   book.actualFinishDate = null;
   await saveBooks(books);
@@ -2338,33 +2349,78 @@ function schoolDaysBetween(startISO, endISO, allowedWeekdays){
   }
   return out;
 }
+// Like schoolDaysBetween but walks forward from startISO, unbounded by a target date, until it
+// has collected `count` matching days. Used when a book has a max-pages-per-day cap: the schedule
+// may need to run past the shared target finish date to respect that cap.
+function schoolDaysForward(startISO, allowedWeekdays, count){
+  const out = [];
+  let d = new Date(startISO+'T00:00:00');
+  let guard = 0;
+  while(out.length < count && guard < 7300){ // safety cap: ~20 years of days
+    if(allowedWeekdays.includes(d.getDay())) out.push(d.toISOString().slice(0,10));
+    d.setDate(d.getDate()+1);
+    guard++;
+  }
+  return out;
+}
 // (Re)builds a book's day list from anchorDate forward, covering pages [resumeFromPage .. book.pageRangeEnd],
 // against the shared schedule's school days and target finish date.
 // Any existing studied days are preserved untouched; unstudied days are replaced.
+// If book.maxPagesPerDay is set, each day is capped at that many pages instead of splitting the
+// range evenly to hit the target date — the schedule stretches out as needed, and a notice is
+// left in repaceNotices if that pushes the finish date past the shared target.
 function buildSchedule(book, anchorDate, resumeFromPage){
   const studiedDays = (book.days||[]).filter(d=>d.studied);
   const totalUnits = book.pageRangeEnd - resumeFromPage + 1;
   if(totalUnits <= 0){ book.days = studiedDays; return; }
-  const endAnchor = schedule.targetFinishDate < anchorDate ? anchorDate : schedule.targetFinishDate;
   // Use this book's own assigned days if set (2-subjects-per-day split); otherwise fall back
   // to the full shared school-day set (old behavior).
   let allowedDays = (book.assignedDays && book.assignedDays.length) ? book.assignedDays : schedule.schoolDays;
   allowedDays = allowedDays.filter(d => (schedule.schoolDays||[]).includes(d)); // never schedule outside the shared school days
   if(!allowedDays.length) allowedDays = schedule.schoolDays;
-  let schoolDays = schoolDaysBetween(anchorDate, endAnchor, allowedDays);
+
+  const cap = (book.maxPagesPerDay && book.maxPagesPerDay > 0) ? book.maxPagesPerDay : null;
+  let schoolDays;
+  if(cap){
+    const daysNeeded = Math.ceil(totalUnits / cap);
+    schoolDays = schoolDaysForward(anchorDate, allowedDays, daysNeeded);
+  } else {
+    const endAnchor = schedule.targetFinishDate < anchorDate ? anchorDate : schedule.targetFinishDate;
+    schoolDays = schoolDaysBetween(anchorDate, endAnchor, allowedDays);
+  }
   if(!schoolDays.length) schoolDays = [anchorDate]; // deadline already passed — cram into today
-  const n = schoolDays.length;
-  const perDay = Math.floor(totalUnits/n);
-  const remainder = totalUnits % n;
+
   let cursor = resumeFromPage;
-  const generated = schoolDays.map((date,i)=>{
-    const count = perDay + (i < remainder ? 1 : 0);
-    if(count<=0) return null;
-    const pageStart = cursor, pageEnd = cursor+count-1;
-    cursor = pageEnd+1;
-    return { id: uid(), date, pageStart, pageEnd, studied:false };
-  }).filter(Boolean);
+  let generated;
+  if(cap){
+    generated = schoolDays.map(date=>{
+      const remaining = book.pageRangeEnd - cursor + 1;
+      if(remaining<=0) return null;
+      const count = Math.min(cap, remaining);
+      const pageStart = cursor, pageEnd = cursor+count-1;
+      cursor = pageEnd+1;
+      return { id: uid(), date, pageStart, pageEnd, studied:false };
+    }).filter(Boolean);
+  } else {
+    const n = schoolDays.length;
+    const perDay = Math.floor(totalUnits/n);
+    const remainder = totalUnits % n;
+    generated = schoolDays.map((date,i)=>{
+      const count = perDay + (i < remainder ? 1 : 0);
+      if(count<=0) return null;
+      const pageStart = cursor, pageEnd = cursor+count-1;
+      cursor = pageEnd+1;
+      return { id: uid(), date, pageStart, pageEnd, studied:false };
+    }).filter(Boolean);
+  }
   book.days = studiedDays.concat(generated);
+
+  if(cap && generated.length && schedule.targetFinishDate){
+    const lastDate = generated[generated.length-1].date;
+    if(lastDate > schedule.targetFinishDate){
+      repaceNotices[book.id] = `At ${cap} page${cap===1?'':'s'}/day this book now finishes ${formatDate(lastDate)}, after your target of ${formatDate(schedule.targetFinishDate)}.`;
+    }
+  }
 }
 async function generateSchedule(bookId, isRegenerate){
   const book = books.find(b=>b.id===bookId);
